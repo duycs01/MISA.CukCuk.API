@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MISA.CukCuk.Api.Model;
 using MySqlConnector;
@@ -13,14 +12,19 @@ namespace MISA.CukCuk.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomersController : ControllerBase
+    public class DepartmentsController : Controller
     {
+
         // GET, POST, PUT, DELETE
+        /// <summary>
+        /// Lấy toàn bộ dữ liệu
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public IActionResult GetCustomers()
+        public IActionResult GetDepartments()
         {
             var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
+                "Database = MF955_DuyLe_CukCuk;" +
                 "User Id = dev;" +
                 "Password = 12345678";
 
@@ -28,22 +32,26 @@ namespace MISA.CukCuk.Api.Controllers
             IDbConnection dbConnection = new MySqlConnection(connectionString);
 
             // 3. Lấy dữ liệu
-            var sqlCommand = "SELECT * FROM Customer";
-            var customers = dbConnection.Query<object>(sqlCommand);
+            var sqlCommand = "SELECT * FROM Department";
+            var departments = dbConnection.Query<Department>(sqlCommand);
 
             // Trả về cho client
-            var response = StatusCode(200, customers);
+            var response = StatusCode(200, departments);
             return response;
         }
 
-
-        [HttpGet("{customerId}")]
-        public IActionResult GetCustomerById(string customerId)
+        /// <summary>
+        /// Lấy dữ liệu theo id
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <returns></returns>
+        [HttpGet("{DepartmentId}")]
+        public IActionResult GetDepartmentById(Guid departmentId)
         {
             // Truy cập vào database
             // 1. Khai báo thông tin database
             var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
+                "Database = MF955_DuyLe_CukCuk;" +
                 "User Id = dev;" +
                 "Password = 12345678";
 
@@ -51,24 +59,48 @@ namespace MISA.CukCuk.Api.Controllers
             IDbConnection dbConnection = new MySqlConnection(connectionString);
 
             // 3. Lấy dữ liệu
-            var sqlCommand = "SELECT * FROM Customer WHERE CustomerId = @CustomerIdParam";
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@CustomerIdParam", customerId);
+            parameters.Add("@DepartmentId", departmentId);
+            var sqlCommand = $"SELECT * FROM Department WHERE DepartmentId = @DepartmentId";
 
-            var customers = dbConnection.QueryFirstOrDefault<Customer>(sqlCommand);
 
-            var response = StatusCode(200, customerId);
+            var Departments = dbConnection.QueryFirstOrDefault<Department>(sqlCommand, parameters);
+
+            var response = StatusCode(200, Departments);
             return response;
+        }
+
+        [HttpGet("fillter")]
+        public IActionResult GetDepartmentByFilter([FromQuery] string departmentCode)
+        {
+            var connectionString = "Host = 47.241.69.179;" +
+                 "Database = MF955_DuyLe_CukCuk;" +
+                 "User Id = dev;" +
+                 "Password = 12345678";
+            IDbConnection dbConnection = new MySqlConnection(connectionString);
+            DynamicParameters dynamicParameters = new DynamicParameters();
+
+            dynamicParameters.Add("@DepartmentCode", departmentCode);
+           
+
+            var sqlCommand = $"SELECT * FROM Department WHERE DepartmentCode = %@DepartmentCode%";
+
+
+            var rowEffects = dbConnection.Query(sqlCommand, dynamicParameters);
+
+            var response = StatusCode(200, rowEffects);
+            return response;
+
         }
 
 
         [HttpPost]
-        public IActionResult InsertCustomer([FromBody]List<Customer> customers)
+        public IActionResult InsertDepartment([FromBody] Department departments)
         {
             // Truy cập vào database
             // 1. Khai báo thông tin database
             var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
+                "Database = MF955_DuyLe_CukCuk;" +
                 "User Id = dev;" +
                 "Password = 12345678";
 
@@ -83,16 +115,17 @@ namespace MISA.CukCuk.Api.Controllers
 
 
             //Đọc từng property của object:
-            var properties = customers.GetType().GetProperties();
+            var properties = departments.GetType().GetProperties();
+            departments.DepartmentId = Guid.NewGuid();
 
             //Duyệt từng property
-            foreach(var prop in properties)
+            foreach (var prop in properties)
             {
                 // Lấy tên của prop
                 var propName = prop.Name;
 
                 // Lấy value của prop
-                var propValue = prop.GetValue(customers);
+                var propValue = prop.GetValue(departments);
 
                 // Lấy kiểu dữ liệu của prop
                 var propType = prop.PropertyType;
@@ -101,25 +134,25 @@ namespace MISA.CukCuk.Api.Controllers
                 dynamicParameters.Add($"@{propName}", propValue);
 
                 columnsName += $"{propName},";
-                propValue += $"@{propName},";
+                columnsParam += $"@{propName},";
 
             }
             columnsName = columnsName.Remove(columnsName.Length - 1, 1);
             columnsParam = columnsParam.Remove(columnsParam.Length - 1, 1);
-            var sqlCommand = $"INSERT INTO Customer({columnsName}) VALUES({columnsParam})";
-            var customer = dbConnection.Execute(sqlCommand, dynamicParameters);
+            var sqlCommand = $"INSERT INTO Department({columnsName}) VALUES({columnsParam})";
+            var rowEffects = dbConnection.Execute(sqlCommand, param: dynamicParameters);
 
-            var response = StatusCode(201, customer);
+            var response = StatusCode(201, rowEffects);
             return response;
         }
 
-        [HttpPut("{customerId}")]
-        public IActionResult InsertCustomer(string customerId, [FromBody] List<Customer> customers)
+        [HttpPatch("{DepartmentId}")]
+        public IActionResult UpdateDepartment(Guid departmentId, [FromBody] Department departments)
         {
             // Truy cập vào database
             // 1. Khai báo thông tin database
             var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
+                "Database = MF955_DuyLe_CukCuk;" +
                 "User Id = dev;" +
                 "Password = 12345678";
 
@@ -133,7 +166,8 @@ namespace MISA.CukCuk.Api.Controllers
 
 
             //Đọc từng property của object:
-            var properties = customers.GetType().GetProperties();
+            var properties = departments.GetType().GetProperties();
+            departments.DepartmentId = departmentId;
 
             //Duyệt từng property
             foreach (var prop in properties)
@@ -142,7 +176,7 @@ namespace MISA.CukCuk.Api.Controllers
                 var propName = prop.Name;
 
                 // Lấy value của prop
-                var propValue = prop.GetValue(customers);
+                var propValue = prop.GetValue(departments);
 
                 // Lấy kiểu dữ liệu của prop
                 var propType = prop.PropertyType;
@@ -154,20 +188,22 @@ namespace MISA.CukCuk.Api.Controllers
                 propValue += $",";
 
             }
+
             columnsName = columnsName.Remove(columnsName.Length - 1, 1);
-            var sqlCommand = $"UPDATE Customer SET{columnsName} WHERE CustomerId={customerId}";
-            var customer = dbConnection.Execute(sqlCommand, dynamicParameters);
-            var response = StatusCode(200, customers);
+            var sqlCommand = $"UPDATE Department SET {columnsName} WHERE DepartmentId=@DepartmentId";
+            var department = dbConnection.Execute(sqlCommand, param: dynamicParameters);
+
+            var response = StatusCode(200, department);
             return response;
         }
 
-        [HttpDelete("{customerId}")]
-        public IActionResult DeleteCustomer(string customerId)
+        [HttpDelete("{DepartmentId}")]
+        public IActionResult DeleteDepartment(Guid departmentId)
         {
             // Truy cập vào database
             // 1. Khai báo thông tin database
             var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
+                "Database = MF955_DuyLe_CukCuk;" +
                 "User Id = dev;" +
                 "Password = 12345678";
 
@@ -175,13 +211,15 @@ namespace MISA.CukCuk.Api.Controllers
             IDbConnection dbConnection = new MySqlConnection(connectionString);
             // Khai báo Dynamic Param
             DynamicParameters dynamicParameters = new DynamicParameters();
-            dynamicParameters.Add($"@{customerId}");
+            dynamicParameters.Add("@DepartmentId", departmentId);
 
-            var sqlCommand = $"DELETE FROM Customer WHERE CustomerId={customerId}";
-            var customer = dbConnection.Execute(sqlCommand, dynamicParameters);
 
-            var response = StatusCode(200, sqlCommand);
+            var sqlCommand = $"DELETE FROM Department WHERE DepartmentId=@DepartmentId";
+            var department = dbConnection.Execute(sqlCommand, dynamicParameters);
+
+            var response = StatusCode(200, department);
             return response;
         }
     }
 }
+

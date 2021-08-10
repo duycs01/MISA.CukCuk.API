@@ -5,14 +5,24 @@ using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Api.Model
 {
-    public class CustomerGroup
+    public class CustomerGroup:BaseEntity
     {
-        public Guid guid { get; set; }
+        /// <summary>
+        /// Khóa chính
+        /// </summary>
+        public Guid CustomerGroupId { get; set; }
 
+        /// <summary>
+        /// Tên nhóm khách hàng
+        /// </summary>
         public string CustomerGroupName { get; set; }
 
+        /// <summary>
+        /// Mô tả
+        /// </summary>
         public string Description { get; set; }
 
-       
+
+
     }
 }

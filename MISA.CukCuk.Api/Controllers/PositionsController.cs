@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MISA.CukCuk.Api.Model;
 using MySqlConnector;
@@ -13,14 +12,19 @@ namespace MISA.CukCuk.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomersController : ControllerBase
+    public class PositionsController : Controller
     {
+
         // GET, POST, PUT, DELETE
+        /// <summary>
+        /// Lấy toàn bộ dữ liệu
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public IActionResult GetCustomers()
+        public IActionResult GetPositions()
         {
             var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
+                "Database = MF955_DuyLe_CukCuk;" +
                 "User Id = dev;" +
                 "Password = 12345678";
 
@@ -28,22 +32,26 @@ namespace MISA.CukCuk.Api.Controllers
             IDbConnection dbConnection = new MySqlConnection(connectionString);
 
             // 3. Lấy dữ liệu
-            var sqlCommand = "SELECT * FROM Customer";
-            var customers = dbConnection.Query<object>(sqlCommand);
+            var sqlCommand = "SELECT * FROM Position";
+            var Positions = dbConnection.Query<Position>(sqlCommand);
 
             // Trả về cho client
-            var response = StatusCode(200, customers);
+            var response = StatusCode(200, Positions);
             return response;
         }
 
-
-        [HttpGet("{customerId}")]
-        public IActionResult GetCustomerById(string customerId)
+        /// <summary>
+        /// Lấy dữ liệu theo id
+        /// </summary>
+        /// <param name="PositionId"></param>
+        /// <returns></returns>
+        [HttpGet("{PositionId}")]
+        public IActionResult GetPositionById(Guid PositionId)
         {
             // Truy cập vào database
             // 1. Khai báo thông tin database
             var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
+                "Database = MF955_DuyLe_CukCuk;" +
                 "User Id = dev;" +
                 "Password = 12345678";
 
@@ -51,24 +59,48 @@ namespace MISA.CukCuk.Api.Controllers
             IDbConnection dbConnection = new MySqlConnection(connectionString);
 
             // 3. Lấy dữ liệu
-            var sqlCommand = "SELECT * FROM Customer WHERE CustomerId = @CustomerIdParam";
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@CustomerIdParam", customerId);
+            parameters.Add("@PositionId", PositionId);
+            var sqlCommand = $"SELECT * FROM Position WHERE PositionId = @PositionId";
 
-            var customers = dbConnection.QueryFirstOrDefault<Customer>(sqlCommand);
 
-            var response = StatusCode(200, customerId);
+            var Positions = dbConnection.QueryFirstOrDefault<Position>(sqlCommand, parameters);
+
+            var response = StatusCode(200, Positions);
             return response;
+        }
+
+        [HttpGet("fillter")]
+        public IActionResult GetPositionByFilter([FromQuery] string PositionCode)
+        {
+            var connectionString = "Host = 47.241.69.179;" +
+                 "Database = MF955_DuyLe_CukCuk;" +
+                 "User Id = dev;" +
+                 "Password = 12345678";
+            IDbConnection dbConnection = new MySqlConnection(connectionString);
+            DynamicParameters dynamicParameters = new DynamicParameters();
+
+            dynamicParameters.Add("@PositionCode", PositionCode);
+
+
+            var sqlCommand = $"SELECT * FROM Position WHERE PositionCode = %@PositionCode%";
+
+
+            var rowEffects = dbConnection.Query(sqlCommand, dynamicParameters);
+
+            var response = StatusCode(200, rowEffects);
+            return response;
+
         }
 
 
         [HttpPost]
-        public IActionResult InsertCustomer([FromBody]List<Customer> customers)
+        public IActionResult InsertPosition([FromBody] Position Positions)
         {
             // Truy cập vào database
             // 1. Khai báo thông tin database
             var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
+                "Database = MF955_DuyLe_CukCuk;" +
                 "User Id = dev;" +
                 "Password = 12345678";
 
@@ -83,16 +115,17 @@ namespace MISA.CukCuk.Api.Controllers
 
 
             //Đọc từng property của object:
-            var properties = customers.GetType().GetProperties();
+            var properties = Positions.GetType().GetProperties();
+            Positions.PositionId = Guid.NewGuid();
 
             //Duyệt từng property
-            foreach(var prop in properties)
+            foreach (var prop in properties)
             {
                 // Lấy tên của prop
                 var propName = prop.Name;
 
                 // Lấy value của prop
-                var propValue = prop.GetValue(customers);
+                var propValue = prop.GetValue(Positions);
 
                 // Lấy kiểu dữ liệu của prop
                 var propType = prop.PropertyType;
@@ -101,25 +134,25 @@ namespace MISA.CukCuk.Api.Controllers
                 dynamicParameters.Add($"@{propName}", propValue);
 
                 columnsName += $"{propName},";
-                propValue += $"@{propName},";
+                columnsParam += $"@{propName},";
 
             }
             columnsName = columnsName.Remove(columnsName.Length - 1, 1);
             columnsParam = columnsParam.Remove(columnsParam.Length - 1, 1);
-            var sqlCommand = $"INSERT INTO Customer({columnsName}) VALUES({columnsParam})";
-            var customer = dbConnection.Execute(sqlCommand, dynamicParameters);
+            var sqlCommand = $"INSERT INTO Position({columnsName}) VALUES({columnsParam})";
+            var rowEffects = dbConnection.Execute(sqlCommand, param: dynamicParameters);
 
-            var response = StatusCode(201, customer);
+            var response = StatusCode(201, rowEffects);
             return response;
         }
 
-        [HttpPut("{customerId}")]
-        public IActionResult InsertCustomer(string customerId, [FromBody] List<Customer> customers)
+        [HttpPatch("{PositionId}")]
+        public IActionResult UpdatePosition(Guid PositionId, [FromBody] Position Positions)
         {
             // Truy cập vào database
             // 1. Khai báo thông tin database
             var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
+                "Database = MF955_DuyLe_CukCuk;" +
                 "User Id = dev;" +
                 "Password = 12345678";
 
@@ -133,7 +166,8 @@ namespace MISA.CukCuk.Api.Controllers
 
 
             //Đọc từng property của object:
-            var properties = customers.GetType().GetProperties();
+            var properties = Positions.GetType().GetProperties();
+            Positions.PositionId = PositionId;
 
             //Duyệt từng property
             foreach (var prop in properties)
@@ -142,7 +176,7 @@ namespace MISA.CukCuk.Api.Controllers
                 var propName = prop.Name;
 
                 // Lấy value của prop
-                var propValue = prop.GetValue(customers);
+                var propValue = prop.GetValue(Positions);
 
                 // Lấy kiểu dữ liệu của prop
                 var propType = prop.PropertyType;
@@ -154,20 +188,22 @@ namespace MISA.CukCuk.Api.Controllers
                 propValue += $",";
 
             }
+
             columnsName = columnsName.Remove(columnsName.Length - 1, 1);
-            var sqlCommand = $"UPDATE Customer SET{columnsName} WHERE CustomerId={customerId}";
-            var customer = dbConnection.Execute(sqlCommand, dynamicParameters);
-            var response = StatusCode(200, customers);
+            var sqlCommand = $"UPDATE Position SET {columnsName} WHERE PositionId=@PositionId";
+            var Position = dbConnection.Execute(sqlCommand, param: dynamicParameters);
+
+            var response = StatusCode(200, Position);
             return response;
         }
 
-        [HttpDelete("{customerId}")]
-        public IActionResult DeleteCustomer(string customerId)
+        [HttpDelete("{PositionId}")]
+        public IActionResult DeletePosition(Guid PositionId)
         {
             // Truy cập vào database
             // 1. Khai báo thông tin database
             var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
+                "Database = MF955_DuyLe_CukCuk;" +
                 "User Id = dev;" +
                 "Password = 12345678";
 
@@ -175,12 +211,13 @@ namespace MISA.CukCuk.Api.Controllers
             IDbConnection dbConnection = new MySqlConnection(connectionString);
             // Khai báo Dynamic Param
             DynamicParameters dynamicParameters = new DynamicParameters();
-            dynamicParameters.Add($"@{customerId}");
+            dynamicParameters.Add("@PositionId", PositionId);
 
-            var sqlCommand = $"DELETE FROM Customer WHERE CustomerId={customerId}";
-            var customer = dbConnection.Execute(sqlCommand, dynamicParameters);
 
-            var response = StatusCode(200, sqlCommand);
+            var sqlCommand = $"DELETE FROM Position WHERE PositionId=@PositionId";
+            var Position = dbConnection.Execute(sqlCommand, dynamicParameters);
+
+            var response = StatusCode(200, Position);
             return response;
         }
     }

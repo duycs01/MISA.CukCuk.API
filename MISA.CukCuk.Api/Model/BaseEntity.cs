@@ -20,11 +20,11 @@ namespace MISA.CukCuk.Api.Model
         /// <summary>
         /// Ngày sửa dữ liệu
         /// </summary>
-        public DateTime? ModifyDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
         /// <summary>
         /// Người sửa dữ liệu
         /// </summary>
-        public string ModifyBy { get; set; }
+        public string ModifiedBy { get; set; }
     }
 }

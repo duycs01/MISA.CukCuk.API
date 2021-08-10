@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Api.Model
 {
-    public class Customer
+    public class Customer:BaseEntity
     {
         #region Property
         /// <summary>
-        /// ID khách hàng
+        /// Khóa chính
         /// </summary>
         public Guid CustomerId { get; set; }
 
@@ -19,17 +19,17 @@ namespace MISA.CukCuk.Api.Model
         public string CustomerCode { get; set; }
 
         /// <summary>
-        /// Họ khách hàng
+        /// Họ và đệm
         /// </summary>
         public string FirstName { get; set; }
 
         /// <summary>
-        /// Tên khách hàng
+        /// Tên
         /// </summary>
         public string LastName { get; set; }
 
         /// <summary>
-        /// Họ và tên khách hàng
+        /// Tên đầy đủ
         /// </summary>
         public string FullName { get; set; }
 
@@ -46,9 +46,18 @@ namespace MISA.CukCuk.Api.Model
         /// <summary>
         /// Ngày sinh
         /// </summary>
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
-        public int MyProperty { get; set; }
+        /// <summary>
+        /// Email
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
+        /// Số điện thoại
+        /// </summary>
+        public string PhoneNumber { get; set; }
+
         #endregion
     }
 }
