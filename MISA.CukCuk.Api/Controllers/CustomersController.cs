@@ -60,6 +60,36 @@ namespace MISA.CukCuk.Api.Controllers
             var response = StatusCode(200, customerId);
             return response;
         }
+        /// <summary>
+        /// Tìm kiếm nhân viên theo các tiêu chí
+        /// </summary>
+        /// <param name="filterName">Truyền vào tên, số điện thoại, mã nhân viên</param>
+        /// <param name="positionId">id vị trí phòng ban</param>
+        /// <param name="departmentId">id chức vụ</param>
+        /// <returns></returns>
+        /// Created by duylv - 10/08/2021
+        [HttpGet("fillter")]
+        public IActionResult GetCustomerByFilter([FromQuery] string filterName)
+        {
+            var connectionString = "Host = 47.241.69.179;" +
+                 "Database = MF955_DuyLe_CukCuk;" +
+                 "User Id = dev;" +
+                 "Password = 12345678";
+            IDbConnection dbConnection = new MySqlConnection(connectionString);
+            DynamicParameters dynamicParameters = new DynamicParameters();
+
+            var input = filterName == null ? string.Empty : filterName;
+            dynamicParameters.Add("@filterName", input);
+            var sqlCommand = "SELECT * FROM Customer e WHERE (e.CustomerCode LIKE CONCAT('%',@filterName,'%') " +
+                "OR e.FullName LIKE CONCAT('%',@filterName,'%')" +
+                "OR e.PhoneNumber LIKE CONCAT('%',@filterName,'%'))";
+
+            var rowEffects = dbConnection.Query(sqlCommand, dynamicParameters);
+
+            var response = StatusCode(200, rowEffects);
+            return response;
+
+        }
 
 
         [HttpPost]

@@ -8,68 +8,188 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using System.Text.RegularExpressions;
 
 namespace MISA.CukCuk.Api.Controllers
 {
-    [Route("api/[controller]")]
+
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
 
         // GET, POST, PUT, DELETE
         /// <summary>
-        /// Lấy toàn bộ dữ liệu
+        /// Lấy toàn bộ dữ liệu nhân viên
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Trả về danh sách nhân viên</returns>
+        /// Created by - duylv - 11/08/2021
         [HttpGet]
         public IActionResult GetEmployees()
         {
-            var connectionString = "Host = 47.241.69.179;" +
-                "Database = MF955_DuyLe_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
+            try
+            {
+                // Truy cập vào database
+                // 1. Khai báo thông tin database
+                var connectionString = "Host = 47.241.69.179;" +
+           "Database = MF955_DuyLe_CukCuk;" +
+           "User Id = dev;" +
+           "Password = 12345678";
 
-            // 2. Khởi tạo đối tượng kết nối với database
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
+                // 2. Khởi tạo đối tượng kết nối với database
+                IDbConnection dbConnection = new MySqlConnection(connectionString);
 
-            // 3. Lấy dữ liệu
-            var sqlCommand = "SELECT * FROM Employee  ORDER BY ModifiedDate DESC";
-            var employees = dbConnection.Query<Employee>(sqlCommand);
+                // 3. Lấy dữ liệu
+                var sqlCommand = "SELECT * FROM Employee  ORDER BY ModifiedDate DESC";
+                var employees = dbConnection.Query<Employee>(sqlCommand);
 
-            // Trả về cho client
-            var response = StatusCode(200, employees);
-            return response;
+                // Trả về cho client
+                if (employees.Count() > 0)
+                {
+                    return StatusCode(200, employees);
+                }
+                else
+                {
+                    return StatusCode(204);
+                }
+            }
+            catch (Exception ex)
+            {
+                var errObj = new
+                {
+                    devMsg = ex.Message,
+                    userMsg = Properties.Resources.Exception_ErrorMsg,
+                    //errorCode = "misa-001",
+                    //moreInfor = "...",
+                };
+                return StatusCode(500, errObj);
+            }
+
+        }
+
+        /// <summary>
+        /// Thực hiện phân trang 
+        /// </summary>
+        /// <param name="pageSize">Số lượng dữ liệu hiển thị trên một trang</param>
+        /// <param name="pageIndex">Vị trí trang được chọn</param>
+        /// <returns>Trả về dữ liệu đã được phân trang</returns>
+        /// Created by - duylv - 12/08/2021
+        /// 
+        [HttpGet("paging")]
+        public IActionResult getEmployeesByPaging([FromQuery] int pageSize, [FromQuery] int pageIndex)
+        {
+
+            try
+            {
+                var connectionString = "Host = 47.241.69.179;" +
+                   "Database = MF955_DuyLe_CukCuk;" +
+                   "User Id = dev;" +
+                   "Password = 12345678";
+                IDbConnection dbConnection = new MySqlConnection(connectionString);
+                DynamicParameters dynamicParameters = new DynamicParameters();
+
+                dynamicParameters.Add("@OffsetParam", (pageIndex - 1) * pageSize);
+                dynamicParameters.Add("@LimitParam", pageSize);
+
+                var sqlCommandPaging = "SELECT * FROM Employee LIMIT @LimitParam OFFSET @OffsetParam";
+                var sqlCommandCount = "SELECT COUNT(EmployeeId) FROM Employee";
+
+                var resPaging = dbConnection.Query<Employee>(sqlCommandPaging, param: dynamicParameters);
+                var resTotal = dbConnection.QueryFirst<int>(sqlCommandCount);
+
+                var totalPage = 0;
+                if (resTotal / pageSize >= 1)
+                {
+                    totalPage = resTotal / pageSize;
+                }
+                else
+                {
+                    totalPage = (resTotal / pageSize) + 1;
+                }
+                var res = new
+                {
+                    data = resPaging,
+                    totalRecord = resTotal,
+                    totalPage = totalPage
+
+                };
+                if (res.data.Count() > 0)
+                {
+                    return StatusCode(200, res);
+                }
+                else
+                {
+                    return StatusCode(204);
+                }
+            }
+            catch (Exception ex)
+            {
+                var errObj = new
+                {
+                    devMsg = ex.Message,
+                    userMsg = Properties.Resources.Exception_ErrorMsg,
+                    //errorCode = "misa-001",
+                    //moreInfor = "...",
+                };
+                return StatusCode(500, errObj);
+            }
+
         }
 
         /// <summary>
         /// Lấy dữ liệu theo id
         /// </summary>
-        /// <param name="employeeId"></param>
-        /// <returns></returns>
+        /// <param name="employeeId">Truyền vào id cần lấy dữ liệu</param>
+        /// <returns>Trả ra kết quả lấy được theo id</returns>
+        /// Created by - duylv - 10/08/2021
+        /// 
         [HttpGet("{employeeId}")]
         public IActionResult GetEmployeeById(Guid employeeId)
         {
-            // Truy cập vào database
-            // 1. Khai báo thông tin database
-            var connectionString = "Host = 47.241.69.179;" +
-                "Database = MF955_DuyLe_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
+            try
+            {
+                // Truy cập vào database
+                // 1. Khai báo thông tin database
+                var connectionString = "Host = 47.241.69.179;" +
+                    "Database = MF955_DuyLe_CukCuk;" +
+                    "User Id = dev;" +
+                    "Password = 12345678";
 
-            // 2. Khởi tạo đối tượng kết nối với database
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
+                // 2. Khởi tạo đối tượng kết nối với database
+                IDbConnection dbConnection = new MySqlConnection(connectionString);
 
-            // 3. Lấy dữ liệu
-            DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@employeeId", employeeId);
-            var sqlCommand = $"SELECT * FROM Employee WHERE EmployeeId = @employeeId";
+                // 3. Lấy dữ liệu
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@employeeId", employeeId);
+                var sqlCommand = $"SELECT * FROM Employee WHERE EmployeeId = @employeeId";
 
 
-            var employees = dbConnection.QueryFirstOrDefault<Employee>(sqlCommand, parameters);
+                var employees = dbConnection.QueryFirstOrDefault<Employee>(sqlCommand, parameters);
 
-            var response = StatusCode(200, employees);
-            return response;
+                if (employees != null)
+                {
+                    return StatusCode(200, employees);
+                }
+                else
+                {
+                    return StatusCode(204);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                var errObj = new
+                {
+                    devMsg = ex.Message,
+                    userMsg = Properties.Resources.Exception_ErrorMsg,
+                    //errorCode = "misa-001",
+                    //moreInfor = "...",
+                };
+                return StatusCode(500, errObj);
+            }
         }
+
 
         /// <summary>
         /// Tìm kiếm nhân viên theo các tiêu chí
@@ -80,9 +200,11 @@ namespace MISA.CukCuk.Api.Controllers
         /// <returns></returns>
         /// Created by duylv - 10/08/2021
         [HttpGet("fillter")]
-        public IActionResult GetEmployeeByFilter([FromQuery] string filterName, [FromQuery] string positionId, [FromQuery] string departmentId)
+        public IActionResult GetEmployeeByFilter([FromQuery] string filterName, [FromQuery] Guid? positionId, [FromQuery] Guid? departmentId)
         {
-            var connectionString = "Host = 47.241.69.179;" +
+            try
+            {
+                var connectionString = "Host = 47.241.69.179;" +
                  "Database = MF955_DuyLe_CukCuk;" +
                  "User Id = dev;" +
                  "Password = 12345678";
@@ -100,10 +222,29 @@ namespace MISA.CukCuk.Api.Controllers
                 "AND ((@positionId IS NOT NULL AND e.PositionId = @positionId) OR @positionId IS NULL)";
 
 
-            var rowEffects = dbConnection.Query(sqlCommand, dynamicParameters);
+            var res = dbConnection.Query(sqlCommand, dynamicParameters);
 
-            var response = StatusCode(200, rowEffects);
-            return response;
+                if (res.Count()>0)
+                {
+                    return StatusCode(200, res);
+                }
+                else
+                {
+                    return StatusCode(204);
+                }
+            }
+            catch (Exception ex)
+            {
+                var errObj = new
+                {
+                    devMsg = ex.Message,
+                    userMsg = Properties.Resources.Exception_ErrorMsg,
+                    //errorCode = "misa-001",
+                    //moreInfor = "...",
+                };
+                return StatusCode(500, errObj);
+            }
+            
 
         }
 
@@ -117,15 +258,59 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpPost]
         public IActionResult InsertEmployee([FromBody] Employee employees)
         {
-            var res = CheckDuplicate(employees.EmployeeCode);
-            if (res)
+            
+            try
             {
+                
+                // Mã nhân viên bắt buộc phải có
+                if (employees.EmployeeCode == "" || employees.EmployeeCode == null)
+                {
+                    var errObj = new
+                    {
+                        devMsg = Properties.Resources.EmtyNull_EmployeeCode,
+                        userMsg = Properties.Resources.EmtyNull_EmployeeCode,
+                        //errorCode = "misa-001",
+                        //moreInfor = "...",
+                        //traceId = "1232",
+                    };
+                    return BadRequest(errObj);
+                }
+
+                // Kiểm tra trùng mã
+                var employeeCode = checkDuplicate(employees.EmployeeCode);
+                if (employeeCode == true)
+                {
+                    var errObj = new
+                    {
+                        devMsg = Properties.Resources.Duplicate_EmployeeCode,
+                        userMsg = Properties.Resources.Duplicate_EmployeeCode,
+                        //errorCode = "misa-001",
+                        //moreInfor = "...",
+                        //traceId = "1232",
+                    };
+                    return StatusCode(400, errObj);
+                }
+
+                var regex = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
+                bool isValid = Regex.IsMatch(employees.Email, regex, RegexOptions.IgnoreCase);
+                if (isValid)
+                {
+                    var errObj = new
+                    {
+                        devMsg = Properties.Resources.Error_Email,
+                        userMsg = Properties.Resources.Error_Email,
+                        //errorCode = "misa-001",
+                        //moreInfor = "...",
+                        //traceId = "1232",
+                    };
+                    return StatusCode(400, errObj);
+                }
                 // Truy cập vào database
                 // 1. Khai báo thông tin database
                 var connectionString = "Host = 47.241.69.179;" +
-                        "Database = MF955_DuyLe_CukCuk;" +
-                        "User Id = dev;" +
-                        "Password = 12345678";
+                    "Database = MF955_DuyLe_CukCuk;" +
+                    "User Id = dev;" +
+                    "Password = 12345678";
 
                 // 2. Khởi tạo đối tượng kết nối với database
                 IDbConnection dbConnection = new MySqlConnection(connectionString);
@@ -170,10 +355,20 @@ namespace MISA.CukCuk.Api.Controllers
                 var response = StatusCode(201, rowEffects + "Đã thêm thành công");
                 return response;
             }
-            else
+            catch (Exception ex)
             {
-                return StatusCode(400, "Mã nhân viên đã bị trùng");
+                var errObj = new
+                {
+                    devMsg = ex.Message,
+                    userMsg = "Có lỗi sảy ra! Vui lòng liên hệ với MISA",
+
+                    errorCode = "misa-001",
+                    //moreInfor = "...",
+                    //traceId = "",
+                };
+                return StatusCode(500, errObj);
             }
+
         }
 
         /// <summary>
@@ -186,9 +381,52 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpPatch("{employeeId}")]
         public IActionResult UpdateEmployee(Guid employeeId, [FromBody] Employee employees)
         {
-            var res = CheckDuplicate(employees.EmployeeCode);
-            if (res)
+            try
             {
+                // Mã nhân viên bắt buộc phải có
+                if (employees.EmployeeCode == "" || employees.EmployeeCode == null)
+                {
+                    var errObj = new
+                    {
+                        devMsg = Properties.Resources.EmtyNull_EmployeeCode,
+                        userMsg = Properties.Resources.EmtyNull_EmployeeCode,
+                        //errorCode = "misa-001",
+                        //moreInfor = "...",
+                        //traceId = "1232",
+                    };
+                    return BadRequest(errObj);
+                }
+
+                // Kiểm tra trùng mã
+                var employeeCode = checkDuplicate(employees.EmployeeCode);
+                if (!employeeCode)
+                {
+                    var errObj = new
+                    {
+                        devMsg = Properties.Resources.Duplicate_EmployeeCode,
+                        userMsg = Properties.Resources.Duplicate_EmployeeCode,
+                        //errorCode = "misa-001",
+                        //moreInfor = "...",
+                        //traceId = "1232",
+                    };
+                    return StatusCode(400, errObj);
+                }
+
+                var regex = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
+                bool isValid = Regex.IsMatch(employees.Email, regex, RegexOptions.IgnoreCase);
+                if (isValid)
+                {
+                    var errObj = new
+                    {
+                        devMsg = Properties.Resources.Error_Email,
+                        userMsg = Properties.Resources.Error_Email,
+                        //errorCode = "misa-001",
+                        //moreInfor = "...",
+                        //traceId = "1232",
+                    };
+                    return StatusCode(400, errObj);
+                }
+
                 // Truy cập vào database
                 // 1. Khai báo thông tin database
                 var connectionString = "Host = 47.241.69.179;" +
@@ -235,11 +473,12 @@ namespace MISA.CukCuk.Api.Controllers
                 var response = StatusCode(200, employee);
                 return response;
             }
-            else
+            catch (Exception)
             {
-                return StatusCode(400, "Mã nhân viên đã bị trùng");
-            }
 
+                throw;
+            }
+            
         }
 
         /// <summary>
@@ -271,13 +510,12 @@ namespace MISA.CukCuk.Api.Controllers
             return response;
         }
 
-
-        public bool CheckDuplicate(string employeeCode)
+        static bool checkDuplicate(string employeeCode)
         {
             var connectionString = "Host = 47.241.69.179;" +
-                    "Database = MF955_DuyLe_CukCuk;" +
-                    "User Id = dev;" +
-                    "Password = 12345678";
+                     "Database = MF955_DuyLe_CukCuk;" +
+                     "User Id = dev;" +
+                     "Password = 12345678";
 
             IDbConnection dbConnection = new MySqlConnection(connectionString);
 
@@ -288,7 +526,7 @@ namespace MISA.CukCuk.Api.Controllers
             var sqlCommand = "SELECT EmployeeCode FROM Employee WHERE EmployeeCode = @employeeCode";
 
             var res = dbConnection.QueryFirstOrDefault(sqlCommand, dynamicParameters);
-            if (res != null)
+            if (res == null)
             {
                 return false;
             }
@@ -297,11 +535,12 @@ namespace MISA.CukCuk.Api.Controllers
                 return true;
             }
         }
+
         [HttpGet("checkDuplicate")]
         public IActionResult CheckEmployeeCode([FromQuery] string employeeCode)
         {
-            var res = CheckDuplicate(employeeCode);
-            if (res)
+            var res = checkDuplicate(employeeCode);
+            if (res ==false)
             {
                 return StatusCode(200, "OK");
             }
