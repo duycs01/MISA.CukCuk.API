@@ -12,7 +12,7 @@ namespace MISA.CukCuk.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PositionsController : Controller
+    public class CustomerGroupController : ControllerBase
     {
 
         // GET, POST, PUT, DELETE
@@ -21,7 +21,7 @@ namespace MISA.CukCuk.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetPositions()
+        public IActionResult GetCustomerGroup()
         {
             var connectionString = "Host = 47.241.69.179;" +
                 "Database = MF955_DuyLe_CukCuk;" +
@@ -32,21 +32,21 @@ namespace MISA.CukCuk.Api.Controllers
             IDbConnection dbConnection = new MySqlConnection(connectionString);
 
             // 3. Lấy dữ liệu
-            var sqlCommand = "SELECT * FROM Position";
-            var positions = dbConnection.Query<Position>(sqlCommand);
+            var sqlCommand = "SELECT * FROM CustomerGroup";
+            var customerGroup = dbConnection.Query<CustomerGroup>(sqlCommand);
 
             // Trả về cho client
-            var response = StatusCode(200, positions);
+            var response = StatusCode(200, customerGroup);
             return response;
         }
 
         /// <summary>
         /// Lấy dữ liệu theo id
         /// </summary>
-        /// <param name="PositionId"></param>
+        /// <param name="customerGroupId"></param>
         /// <returns></returns>
-        [HttpGet("{PositionId}")]
-        public IActionResult GetPositionById(Guid positionId)
+        [HttpGet("{CustomerGroupId}")]
+        public IActionResult GetCustomerGroupById(Guid customerGroupId)
         {
             // Truy cập vào database
             // 1. Khai báo thông tin database
@@ -60,18 +60,18 @@ namespace MISA.CukCuk.Api.Controllers
 
             // 3. Lấy dữ liệu
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@PositionId",positionId);
-            var sqlCommand = $"SELECT * FROM Position WHERE PositionId = @PositionId";
+            parameters.Add("@CustomerGroupId", customerGroupId);
+            var sqlCommand = $"SELECT * FROM CustomerGroup WHERE CustomerGroupId = @CustomerGroupId";
 
 
-            var Positions = dbConnection.QueryFirstOrDefault<Position>(sqlCommand, parameters);
+            var customerGroup = dbConnection.QueryFirstOrDefault<CustomerGroup>(sqlCommand, parameters);
 
-            var response = StatusCode(200, Positions);
+            var response = StatusCode(200, customerGroup);
             return response;
         }
 
         [HttpGet("fillter")]
-        public IActionResult GetPositionByFilter([FromQuery] string positionCode)
+        public IActionResult GetCustomerGroupByFilter([FromQuery] string customerGroupCode, [FromQuery] string customerGroupName)
         {
             var connectionString = "Host = 47.241.69.179;" +
                  "Database = MF955_DuyLe_CukCuk;" +
@@ -80,10 +80,10 @@ namespace MISA.CukCuk.Api.Controllers
             IDbConnection dbConnection = new MySqlConnection(connectionString);
             DynamicParameters dynamicParameters = new DynamicParameters();
 
-            dynamicParameters.Add("@PositionCode", positionCode);
+            dynamicParameters.Add("@CustomerGroupCode", customerGroupCode);
+            dynamicParameters.Add("@CustomerGroupName", customerGroupName);
 
-
-            var sqlCommand = $"SELECT * FROM Position WHERE PositionCode = '%' + @PositionCode +'%'";
+            var sqlCommand = $"SELECT * FROM CustomerGroup WHERE CustomerGroupCode = %+@CustomerGroupCode+% AND CustomerGroupName = %+@CustomerGroupName+% ";
 
 
             var rowEffects = dbConnection.Query(sqlCommand, dynamicParameters);
@@ -95,7 +95,7 @@ namespace MISA.CukCuk.Api.Controllers
 
 
         [HttpPost]
-        public IActionResult InsertPosition([FromBody] Position positions)
+        public IActionResult InsertCustomerGroup([FromBody] CustomerGroup customerGroup)
         {
             // Truy cập vào database
             // 1. Khai báo thông tin database
@@ -115,8 +115,8 @@ namespace MISA.CukCuk.Api.Controllers
 
 
             //Đọc từng property của object:
-            var properties = positions.GetType().GetProperties();
-            positions.PositionId = Guid.NewGuid();
+            var properties = customerGroup.GetType().GetProperties();
+            customerGroup.CustomerGroupId = Guid.NewGuid();
 
             //Duyệt từng property
             foreach (var prop in properties)
@@ -125,7 +125,7 @@ namespace MISA.CukCuk.Api.Controllers
                 var propName = prop.Name;
 
                 // Lấy value của prop
-                var propValue = prop.GetValue(positions);
+                var propValue = prop.GetValue(customerGroup);
 
                 // Lấy kiểu dữ liệu của prop
                 var propType = prop.PropertyType;
@@ -139,15 +139,15 @@ namespace MISA.CukCuk.Api.Controllers
             }
             columnsName = columnsName.Remove(columnsName.Length - 1, 1);
             columnsParam = columnsParam.Remove(columnsParam.Length - 1, 1);
-            var sqlCommand = $"INSERT INTO Position({columnsName}) VALUES({columnsParam});";
+            var sqlCommand = $"INSERT INTO CustomerGroup({columnsName}) VALUES({columnsParam})";
             var rowEffects = dbConnection.Execute(sqlCommand, param: dynamicParameters);
 
             var response = StatusCode(201, rowEffects);
             return response;
         }
 
-        [HttpPatch("{PositionId}")]
-        public IActionResult UpdatePosition(Guid positionId, [FromBody] Position positions)
+        [HttpPatch("{CustomerGroupId}")]
+        public IActionResult UpdateCustomerGroup(Guid customerGroupId, [FromBody] CustomerGroup customerGroup)
         {
             // Truy cập vào database
             // 1. Khai báo thông tin database
@@ -166,8 +166,8 @@ namespace MISA.CukCuk.Api.Controllers
 
 
             //Đọc từng property của object:
-            var properties = positions.GetType().GetProperties();
-            positions.PositionId = positionId;
+            var properties = customerGroup.GetType().GetProperties();
+            customerGroup.CustomerGroupId = customerGroupId;
 
             //Duyệt từng property
             foreach (var prop in properties)
@@ -176,7 +176,7 @@ namespace MISA.CukCuk.Api.Controllers
                 var propName = prop.Name;
 
                 // Lấy value của prop
-                var propValue = prop.GetValue(positions);
+                var propValue = prop.GetValue(customerGroup);
 
                 // Lấy kiểu dữ liệu của prop
                 var propType = prop.PropertyType;
@@ -185,20 +185,19 @@ namespace MISA.CukCuk.Api.Controllers
                 dynamicParameters.Add($"@{propName}", propValue);
 
                 columnsName += $"{propName}=@{propName},";
-                propValue += $",";
 
             }
 
             columnsName = columnsName.Remove(columnsName.Length - 1, 1);
-            var sqlCommand = $"UPDATE Position SET {columnsName} WHERE PositionId=@PositionId";
-            var position = dbConnection.Execute(sqlCommand, param: dynamicParameters);
+            var sqlCommand = $"UPDATE CustomerGroup SET {columnsName} WHERE CustomerGroupId=@CustomerGroupId";
+            var customerGroups = dbConnection.Execute(sqlCommand, param: dynamicParameters);
 
-            var response = StatusCode(200, position);
+            var response = StatusCode(200, customerGroups);
             return response;
         }
 
-        [HttpDelete("{PositionId}")]
-        public IActionResult DeletePosition(Guid positionId)
+        [HttpDelete("{CustomerGroupId}")]
+        public IActionResult DeleteCustomerGroup(Guid customerGroupId)
         {
             // Truy cập vào database
             // 1. Khai báo thông tin database
@@ -211,13 +210,13 @@ namespace MISA.CukCuk.Api.Controllers
             IDbConnection dbConnection = new MySqlConnection(connectionString);
             // Khai báo Dynamic Param
             DynamicParameters dynamicParameters = new DynamicParameters();
-            dynamicParameters.Add("@PositionId", positionId);
+            dynamicParameters.Add("@CustomerGroupId", customerGroupId);
 
 
-            var sqlCommand = $"DELETE FROM Position WHERE PositionId=@PositionId";
-            var Position = dbConnection.Execute(sqlCommand, dynamicParameters);
+            var sqlCommand = $"DELETE FROM CustomerGroup WHERE CustomerGroupId=@CustomerGroupId";
+            var CustomerGroup = dbConnection.Execute(sqlCommand, dynamicParameters);
 
-            var response = StatusCode(200, Position);
+            var response = StatusCode(200, CustomerGroup);
             return response;
         }
     }
