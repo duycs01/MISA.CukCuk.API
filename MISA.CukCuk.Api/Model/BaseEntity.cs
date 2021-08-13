@@ -7,6 +7,8 @@ namespace MISA.CukCuk.Api.Model
 {
     public class BaseEntity
     {
+        #region Property
+
         /// <summary>
         ///  Ngày tạo dữ liệu
         /// </summary>
@@ -26,5 +28,6 @@ namespace MISA.CukCuk.Api.Model
         /// Người sửa dữ liệu
         /// </summary>
         public string ModifiedBy { get; set; }
+        #endregion
     }
 }

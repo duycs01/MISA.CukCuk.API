@@ -7,9 +7,12 @@ namespace MISA.CukCuk.Api.Model
 {
     public class Department:BaseEntity
     {
+        #region Property
+
         public Guid DepartmentId { get; set; }
         public string DepartmentCode { get; set; }
         public string DepartmentName { get; set; }
         public string Description { get; set; }
+        #endregion
     }
 }

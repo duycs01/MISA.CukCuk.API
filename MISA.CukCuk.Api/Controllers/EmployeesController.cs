@@ -261,7 +261,6 @@ namespace MISA.CukCuk.Api.Controllers
             
             try
             {
-                
                 // Mã nhân viên bắt buộc phải có
                 if (employees.EmployeeCode == "" || employees.EmployeeCode == null)
                 {
@@ -352,15 +351,21 @@ namespace MISA.CukCuk.Api.Controllers
                 var sqlCommand = $"INSERT INTO Employee({columnsName}) VALUES({columnsParam})";
                 var rowEffects = dbConnection.Execute(sqlCommand, param: dynamicParameters);
 
-                var response = StatusCode(201, rowEffects + "Đã thêm thành công");
-                return response;
+                if (rowEffects > 0)
+                {
+                    return StatusCode(201, rowEffects + "Đã thêm thành công");
+                }
+                else
+                {
+                    return StatusCode(204, rowEffects + "Đã thêm thất bại");
+                }
             }
             catch (Exception ex)
             {
                 var errObj = new
                 {
                     devMsg = ex.Message,
-                    userMsg = "Có lỗi sảy ra! Vui lòng liên hệ với MISA",
+                    userMsg = Properties.Resources.Exception_ErrorMsg,
 
                     errorCode = "misa-001",
                     //moreInfor = "...",
@@ -399,7 +404,7 @@ namespace MISA.CukCuk.Api.Controllers
 
                 // Kiểm tra trùng mã
                 var employeeCode = checkDuplicate(employees.EmployeeCode);
-                if (!employeeCode)
+                if (employeeCode == true)
                 {
                     var errObj = new
                     {
@@ -473,10 +478,18 @@ namespace MISA.CukCuk.Api.Controllers
                 var response = StatusCode(200, employee);
                 return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                var errObj = new
+                {
+                    devMsg = ex.Message,
+                    userMsg = Properties.Resources.Exception_ErrorMsg,
 
-                throw;
+                    errorCode = "misa-001",
+                    //moreInfor = "...",
+                    //traceId = "",
+                };
+                return StatusCode(500, errObj);
             }
             
         }
@@ -484,32 +497,56 @@ namespace MISA.CukCuk.Api.Controllers
         /// <summary>
         /// Xóa nhân viên theo Id
         /// </summary>
-        /// <param name="employeeId"></param>
+        /// <param name="employeeId">Truyền vào id cần xóa</param>
         /// <returns></returns>
+        /// Created by duylv - 11/08/2021
         [HttpDelete("{employeeId}")]
         public IActionResult DeleteEmployee(Guid employeeId)
         {
-            // Truy cập vào database
-            // 1. Khai báo thông tin database
-            var connectionString = "Host = 47.241.69.179;" +
-                "Database = MF955_DuyLe_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
+            try
+            {
+                // Truy cập vào database
+                // 1. Khai báo thông tin database
+                var connectionString = "Host = 47.241.69.179;" +
+                    "Database = MF955_DuyLe_CukCuk;" +
+                    "User Id = dev;" +
+                    "Password = 12345678";
 
-            // 2. Khởi tạo đối tượng kết nối với database
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-            // Khai báo Dynamic Param
-            DynamicParameters dynamicParameters = new DynamicParameters();
-            dynamicParameters.Add("@employeeId", employeeId);
+                // 2. Khởi tạo đối tượng kết nối với database
+                IDbConnection dbConnection = new MySqlConnection(connectionString);
+                // Khai báo Dynamic Param
+                DynamicParameters dynamicParameters = new DynamicParameters();
+                dynamicParameters.Add("@employeeId", employeeId);
 
 
-            var sqlCommand = $"DELETE FROM Employee WHERE EmployeeId=@employeeId";
-            var employee = dbConnection.Execute(sqlCommand, dynamicParameters);
+                var sqlCommand = $"DELETE FROM Employee WHERE EmployeeId=@employeeId";
+                var employee = dbConnection.Execute(sqlCommand, dynamicParameters);
 
-            var response = StatusCode(200, employee);
-            return response;
+                var response = StatusCode(200, employee);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var errObj = new
+                {
+                    devMsg = ex.Message,
+                    userMsg = Properties.Resources.Exception_ErrorMsg,
+
+                    errorCode = "misa-001",
+                    //moreInfor = "...",
+                    //traceId = "",
+                };
+                return StatusCode(500, errObj);
+            }
+            
         }
 
+        /// <summary>
+        /// Kiểm tra trùng mã nhân viên
+        /// </summary>
+        /// <param name="employeeCode">Truyền vào mã nhân viên</param>
+        /// <returns>true/false</returns>
+        /// CreateBy duylv - 12/08/2021
         static bool checkDuplicate(string employeeCode)
         {
             var connectionString = "Host = 47.241.69.179;" +
@@ -535,21 +572,7 @@ namespace MISA.CukCuk.Api.Controllers
                 return true;
             }
         }
-
-        [HttpGet("checkDuplicate")]
-        public IActionResult CheckEmployeeCode([FromQuery] string employeeCode)
-        {
-            var res = checkDuplicate(employeeCode);
-            if (res ==false)
-            {
-                return StatusCode(200, "OK");
-            }
-            else
-            {
-                return StatusCode(400, "Mã nhân viên đã bị trùng");
-            }
-
-        }
+       
     }
 
 }

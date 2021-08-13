@@ -7,6 +7,8 @@ namespace MISA.CukCuk.Api.Model
 {
     public class CustomerGroup:BaseEntity
     {
+        #region Property
+
         /// <summary>
         /// Khóa chính
         /// </summary>
@@ -22,7 +24,6 @@ namespace MISA.CukCuk.Api.Model
         /// </summary>
         public string Description { get; set; }
 
-
-
+        #endregion
     }
 }

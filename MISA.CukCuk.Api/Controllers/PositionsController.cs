@@ -19,7 +19,9 @@ namespace MISA.CukCuk.Api.Controllers
         /// <summary>
         /// Lấy toàn bộ dữ liệu
         /// </summary>
-        /// <returns></returns>
+        /// <returns> Trả về danh sách vị trí</returns>
+        /// Created by - duylv - 11/08/2021
+        /// 
         [HttpGet]
         public IActionResult GetPositions()
         {
@@ -41,10 +43,11 @@ namespace MISA.CukCuk.Api.Controllers
         }
 
         /// <summary>
-        /// Lấy dữ liệu theo id
+        /// Lấy toàn bộ dữ liệu
         /// </summary>
-        /// <param name="PositionId"></param>
-        /// <returns></returns>
+        /// <returns> Trả về vị trí theo id</returns>
+        /// Created by - duylv - 11/08/2021
+        /// 
         [HttpGet("{PositionId}")]
         public IActionResult GetPositionById(Guid positionId)
         {
@@ -70,30 +73,13 @@ namespace MISA.CukCuk.Api.Controllers
             return response;
         }
 
-        [HttpGet("fillter")]
-        public IActionResult GetPositionByFilter([FromQuery] string positionCode)
-        {
-            var connectionString = "Host = 47.241.69.179;" +
-                 "Database = MF955_DuyLe_CukCuk;" +
-                 "User Id = dev;" +
-                 "Password = 12345678";
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-            DynamicParameters dynamicParameters = new DynamicParameters();
 
-            dynamicParameters.Add("@PositionCode", positionCode);
-
-
-            var sqlCommand = $"SELECT * FROM Position WHERE PositionCode = '%' + @PositionCode +'%'";
-
-
-            var rowEffects = dbConnection.Query(sqlCommand, dynamicParameters);
-
-            var response = StatusCode(200, rowEffects);
-            return response;
-
-        }
-
-
+        /// <summary>
+        ///Thêm mới vị trí
+        /// </summary>
+        /// <returns> Trả về vị trí thêm mới</returns>
+        /// Created by - duylv - 11/08/2021
+        /// 
         [HttpPost]
         public IActionResult InsertPosition([FromBody] Position positions)
         {
@@ -146,6 +132,12 @@ namespace MISA.CukCuk.Api.Controllers
             return response;
         }
 
+        /// <summary>
+        ///Sửa vị trí theo id
+        /// </summary>
+        /// <returns> Trả về vị trí đã sửa</returns>
+        /// Created by - duylv - 11/08/2021
+        /// 
         [HttpPatch("{PositionId}")]
         public IActionResult UpdatePosition(Guid positionId, [FromBody] Position positions)
         {
@@ -197,6 +189,12 @@ namespace MISA.CukCuk.Api.Controllers
             return response;
         }
 
+        /// <summary>
+        ///Xóa vị trí theo id
+        /// </summary>
+        /// <returns></returns>
+        /// Created by - duylv - 11/08/2021
+        /// 
         [HttpDelete("{PositionId}")]
         public IActionResult DeletePosition(Guid positionId)
         {

@@ -17,9 +17,10 @@ namespace MISA.CukCuk.Api.Controllers
 
         // GET, POST, PUT, DELETE
         /// <summary>
-        /// Lấy toàn bộ dữ liệu
+        /// Lấy toàn bộ dữ liệu 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Trả về danh sách Nhóm khách hàng</returns>
+        /// Created by - duylv - 11/08/2021
         [HttpGet]
         public IActionResult GetCustomerGroup()
         {
@@ -43,8 +44,8 @@ namespace MISA.CukCuk.Api.Controllers
         /// <summary>
         /// Lấy dữ liệu theo id
         /// </summary>
-        /// <param name="customerGroupId"></param>
-        /// <returns></returns>
+        /// <returns>Trả về danh sách Nhóm khách hàng</returns>
+        /// Created by - duylv - 11/08/2021
         [HttpGet("{CustomerGroupId}")]
         public IActionResult GetCustomerGroupById(Guid customerGroupId)
         {
@@ -70,30 +71,11 @@ namespace MISA.CukCuk.Api.Controllers
             return response;
         }
 
-        [HttpGet("fillter")]
-        public IActionResult GetCustomerGroupByFilter([FromQuery] string customerGroupCode, [FromQuery] string customerGroupName)
-        {
-            var connectionString = "Host = 47.241.69.179;" +
-                 "Database = MF955_DuyLe_CukCuk;" +
-                 "User Id = dev;" +
-                 "Password = 12345678";
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-            DynamicParameters dynamicParameters = new DynamicParameters();
-
-            dynamicParameters.Add("@CustomerGroupCode", customerGroupCode);
-            dynamicParameters.Add("@CustomerGroupName", customerGroupName);
-
-            var sqlCommand = $"SELECT * FROM CustomerGroup WHERE CustomerGroupCode = %+@CustomerGroupCode+% AND CustomerGroupName = %+@CustomerGroupName+% ";
-
-
-            var rowEffects = dbConnection.Query(sqlCommand, dynamicParameters);
-
-            var response = StatusCode(200, rowEffects);
-            return response;
-
-        }
-
-
+        /// <summary>
+        /// Thêm mới nhóm khách hàng
+        /// </summary>
+        /// <returns>Trả về Nhóm khách hàng được thêm mới</returns>
+        /// Created by - duylv - 11/08/2021
         [HttpPost]
         public IActionResult InsertCustomerGroup([FromBody] CustomerGroup customerGroup)
         {
@@ -196,6 +178,11 @@ namespace MISA.CukCuk.Api.Controllers
             return response;
         }
 
+        /// <summary>
+        /// Xóa nhóm khách hàng
+        /// </summary>
+        /// <returns></returns>
+        /// Created by - duylv - 11/08/2021
         [HttpDelete("{CustomerGroupId}")]
         public IActionResult DeleteCustomerGroup(Guid customerGroupId)
         {

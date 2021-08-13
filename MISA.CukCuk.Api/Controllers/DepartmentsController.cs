@@ -17,9 +17,10 @@ namespace MISA.CukCuk.Api.Controllers
 
         // GET, POST, PUT, DELETE
         /// <summary>
-        /// Lấy toàn bộ dữ liệu
+        /// Lấy toàn bộ dữ liệu 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Trả về danh sách Nhóm Phòng ban</returns>
+        /// Created by - duylv - 11/08/2021
         [HttpGet]
         public IActionResult GetDepartments()
         {
@@ -43,8 +44,8 @@ namespace MISA.CukCuk.Api.Controllers
         /// <summary>
         /// Lấy dữ liệu theo id
         /// </summary>
-        /// <param name="departmentId"></param>
-        /// <returns></returns>
+        /// <returns>Trả về phòng ban theo id</returns>
+        /// Created by - duylv - 11/08/2021
         [HttpGet("{DepartmentId}")]
         public IActionResult GetDepartmentById(Guid departmentId)
         {
@@ -93,7 +94,11 @@ namespace MISA.CukCuk.Api.Controllers
 
         }
 
-
+        /// <summary>
+        /// Thêm mới phòng ban
+        /// </summary>
+        /// <returns>Trả về phòng ban thêm mới</returns>
+        /// Created by - duylv - 11/08/2021
         [HttpPost]
         public IActionResult InsertDepartment([FromBody] Department departments)
         {
@@ -146,6 +151,11 @@ namespace MISA.CukCuk.Api.Controllers
             return response;
         }
 
+        /// <summary>
+        /// Sửa phòng ban
+        /// </summary>
+        /// <returns>Trả về phòng ban đã sửa</returns>
+        /// Created by - duylv - 11/08/2021
         [HttpPatch("{DepartmentId}")]
         public IActionResult UpdateDepartment(Guid departmentId, [FromBody] Department departments)
         {
@@ -197,6 +207,11 @@ namespace MISA.CukCuk.Api.Controllers
             return response;
         }
 
+        /// <summary>
+        /// Xóa phòng ban
+        /// </summary>
+        /// <returns></returns>
+        /// Created by - duylv - 11/08/2021
         [HttpDelete("{DepartmentId}")]
         public IActionResult DeleteDepartment(Guid departmentId)
         {

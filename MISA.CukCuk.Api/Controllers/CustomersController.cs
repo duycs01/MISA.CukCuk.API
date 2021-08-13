@@ -16,6 +16,11 @@ namespace MISA.CukCuk.Api.Controllers
     public class CustomersController : ControllerBase
     {
         // GET, POST, PUT, DELETE
+        /// <summary>
+        /// Lấy toàn bộ dữ liệu Khách hàng
+        /// </summary>
+        /// <returns>Trả về danh sách khách hàng</returns>
+        /// Created by - duylv - 11/08/2021
         [HttpGet]
         public IActionResult GetCustomers()
         {
