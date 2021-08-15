@@ -353,11 +353,11 @@ namespace MISA.CukCuk.Api.Controllers
 
                 if (rowEffects > 0)
                 {
-                    return StatusCode(201, rowEffects + "Đã thêm thành công");
+                    return StatusCode(201, rowEffects + Properties.Resources.Created_Success);
                 }
                 else
                 {
-                    return StatusCode(204, rowEffects + "Đã thêm thất bại");
+                    return StatusCode(204, rowEffects + Properties.Resources.Created_Error);
                 }
             }
             catch (Exception ex)
