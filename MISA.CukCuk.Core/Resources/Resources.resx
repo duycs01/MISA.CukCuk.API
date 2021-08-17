@@ -153,8 +153,8 @@
   <data name="Exception_ErrorMsg" xml:space="preserve">
     <value>Có lỗi sảy ra vui lòng liên hệ MISA.</value>
   </data>
-  <data name="Lấy dữ liệu thành công" xml:space="preserve">
-    <value />
+  <data name="success" xml:space="preserve">
+    <value>Lấy dữ liệu thành công</value>
   </data>
   <data name="Update_Error" xml:space="preserve">
     <value>Sửa thất bại</value>

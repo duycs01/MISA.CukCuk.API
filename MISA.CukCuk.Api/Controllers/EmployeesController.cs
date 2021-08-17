@@ -59,7 +59,7 @@ namespace MISA.CukCuk.Api.Controllers
                 var errObj = new
                 {
                     devMsg = ex.Message,
-                    userMsg = Properties.Resources.Exception_ErrorMsg,
+                    userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
                     //errorCode = "misa-001",
                     //moreInfor = "...",
                 };
@@ -128,7 +128,7 @@ namespace MISA.CukCuk.Api.Controllers
                 var errObj = new
                 {
                     devMsg = ex.Message,
-                    userMsg = Properties.Resources.Exception_ErrorMsg,
+                    userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
                     //errorCode = "misa-001",
                     //moreInfor = "...",
                 };
@@ -182,7 +182,7 @@ namespace MISA.CukCuk.Api.Controllers
                 var errObj = new
                 {
                     devMsg = ex.Message,
-                    userMsg = Properties.Resources.Exception_ErrorMsg,
+                    userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
                     //errorCode = "misa-001",
                     //moreInfor = "...",
                 };
@@ -238,7 +238,7 @@ namespace MISA.CukCuk.Api.Controllers
                 var errObj = new
                 {
                     devMsg = ex.Message,
-                    userMsg = Properties.Resources.Exception_ErrorMsg,
+                    userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
                     //errorCode = "misa-001",
                     //moreInfor = "...",
                 };
@@ -266,8 +266,8 @@ namespace MISA.CukCuk.Api.Controllers
                 {
                     var errObj = new
                     {
-                        devMsg = Properties.Resources.EmtyNull_EmployeeCode,
-                        userMsg = Properties.Resources.EmtyNull_EmployeeCode,
+                        devMsg = MISA.CukCuk.Core.Resources.Resources.EmtyNull_EmployeeCode,
+                        userMsg = MISA.CukCuk.Core.Resources.Resources.EmtyNull_EmployeeCode,
                         //errorCode = "misa-001",
                         //moreInfor = "...",
                         //traceId = "1232",
@@ -281,8 +281,8 @@ namespace MISA.CukCuk.Api.Controllers
                 {
                     var errObj = new
                     {
-                        devMsg = Properties.Resources.Duplicate_EmployeeCode,
-                        userMsg = Properties.Resources.Duplicate_EmployeeCode,
+                        devMsg = MISA.CukCuk.Core.Resources.Resources.Duplicate_EmployeeCode,
+                        userMsg = MISA.CukCuk.Core.Resources.Resources.Duplicate_EmployeeCode,
                         //errorCode = "misa-001",
                         //moreInfor = "...",
                         //traceId = "1232",
@@ -296,8 +296,8 @@ namespace MISA.CukCuk.Api.Controllers
                 {
                     var errObj = new
                     {
-                        devMsg = Properties.Resources.Error_Email,
-                        userMsg = Properties.Resources.Error_Email,
+                        devMsg = MISA.CukCuk.Core.Resources.Resources.Error_Email,
+                        userMsg = MISA.CukCuk.Core.Resources.Resources.Error_Email,
                         //errorCode = "misa-001",
                         //moreInfor = "...",
                         //traceId = "1232",
@@ -353,11 +353,11 @@ namespace MISA.CukCuk.Api.Controllers
 
                 if (rowEffects > 0)
                 {
-                    return StatusCode(201, rowEffects + Properties.Resources.Created_Success);
+                    return StatusCode(201, rowEffects + MISA.CukCuk.Core.Resources.Resources.Created_Success);
                 }
                 else
                 {
-                    return StatusCode(204, rowEffects + Properties.Resources.Created_Error);
+                    return StatusCode(204, rowEffects + MISA.CukCuk.Core.Resources.Resources.Created_Error);
                 }
             }
             catch (Exception ex)
@@ -365,7 +365,7 @@ namespace MISA.CukCuk.Api.Controllers
                 var errObj = new
                 {
                     devMsg = ex.Message,
-                    userMsg = Properties.Resources.Exception_ErrorMsg,
+                    userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
 
                     errorCode = "misa-001",
                     //moreInfor = "...",
@@ -393,8 +393,8 @@ namespace MISA.CukCuk.Api.Controllers
                 {
                     var errObj = new
                     {
-                        devMsg = Properties.Resources.EmtyNull_EmployeeCode,
-                        userMsg = Properties.Resources.EmtyNull_EmployeeCode,
+                        devMsg = MISA.CukCuk.Core.Resources.Resources.EmtyNull_EmployeeCode,
+                        userMsg = MISA.CukCuk.Core.Resources.Resources.EmtyNull_EmployeeCode,
                         //errorCode = "misa-001",
                         //moreInfor = "...",
                         //traceId = "1232",
@@ -408,8 +408,8 @@ namespace MISA.CukCuk.Api.Controllers
                 {
                     var errObj = new
                     {
-                        devMsg = Properties.Resources.Duplicate_EmployeeCode,
-                        userMsg = Properties.Resources.Duplicate_EmployeeCode,
+                        devMsg = MISA.CukCuk.Core.Resources.Resources.Duplicate_EmployeeCode,
+                        userMsg = MISA.CukCuk.Core.Resources.Resources.Duplicate_EmployeeCode,
                         //errorCode = "misa-001",
                         //moreInfor = "...",
                         //traceId = "1232",
@@ -423,8 +423,8 @@ namespace MISA.CukCuk.Api.Controllers
                 {
                     var errObj = new
                     {
-                        devMsg = Properties.Resources.Error_Email,
-                        userMsg = Properties.Resources.Error_Email,
+                        devMsg = MISA.CukCuk.Core.Resources.Resources.Error_Email,
+                        userMsg = MISA.CukCuk.Core.Resources.Resources.Error_Email,
                         //errorCode = "misa-001",
                         //moreInfor = "...",
                         //traceId = "1232",
@@ -483,7 +483,7 @@ namespace MISA.CukCuk.Api.Controllers
                 var errObj = new
                 {
                     devMsg = ex.Message,
-                    userMsg = Properties.Resources.Exception_ErrorMsg,
+                    userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
 
                     errorCode = "misa-001",
                     //moreInfor = "...",
@@ -530,7 +530,7 @@ namespace MISA.CukCuk.Api.Controllers
                 var errObj = new
                 {
                     devMsg = ex.Message,
-                    userMsg = Properties.Resources.Exception_ErrorMsg,
+                    userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
 
                     errorCode = "misa-001",
                     //moreInfor = "...",

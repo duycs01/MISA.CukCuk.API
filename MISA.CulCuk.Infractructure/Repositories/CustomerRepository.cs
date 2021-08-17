@@ -1,6 +1,9 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using MISA.CukCuk.Core.Entity;
 using MISA.CukCuk.Core.Interfaces.Repository;
+using MISA.CukCuk.Core.MISAAttribute;
+using MISA.CulCuk.Infractructure.Repositories;
 using MySqlConnector;
 using System;
 using System.Collections.Generic;
@@ -11,108 +14,53 @@ using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Infractructure.Repositories
 {
-    public class CustomerRepository : ICustomerRepository
+    public class CustomerRepository : BaseRepository<Customer>
     {
-        public int DeleteById(Guid customerId)
-        {
-            // Truy cập vào database
-            // 1. Khai báo thông tin database
-            var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
+        #region DECLEAR
+        string _connectionString = string.Empty;
+        IDbConnection _dbConnection = null;
 
-            // 2. Khởi tạo đối tượng kết nối với database
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-            // Khai báo Dynamic Param
+        #endregion
+
+        /// <summary>
+        /// Hàm khởi tạo
+        /// </summary>
+        /// <param name="configuration"></param>
+        public CustomerRepository(IConfiguration configuration) :base(configuration)
+        {
+            _connectionString = configuration.GetConnectionString("MISACukCukConnectionString");
+            _dbConnection = new MySqlConnection(_connectionString); 
+        }
+        #region Method
+   
+        /// <summary>
+        /// Kiểm tra trùng mã nhân viên
+        /// </summary>
+        /// <param name="employeeCode">Truyền vào mã nhân viên</param>
+        /// <returns>true/false</returns>
+        /// CreateBy duylv - 12/08/2021
+        public bool CheckDuplicate(string employeeCode)
+        {
+
             DynamicParameters dynamicParameters = new DynamicParameters();
-            dynamicParameters.Add("@customerId", customerId);
 
-            var sqlCommand = $"DELETE FROM Customer WHERE CustomerId=@customerId";
-            var customer = dbConnection.Execute(sqlCommand, dynamicParameters);
+            dynamicParameters.Add("@employeeCode", employeeCode);
 
-            return customer;
-        }
+            var sqlCommand = "SELECT EmployeeCode FROM Employee WHERE EmployeeCode = @employeeCode";
 
-        public int DeleteListId(List<Guid> listId)
-        {
-            // Truy cập vào database
-            // 1. Khai báo thông tin database
-            var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
-
-            // 2. Khởi tạo đối tượng kết nối với database
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-            // Khai báo Dynamic Param
-            DynamicParameters dynamicParameters = new DynamicParameters();
-            foreach (var item in listId)
+            var res = _dbConnection.QueryFirstOrDefault(sqlCommand, dynamicParameters);
+            if (res == null)
             {
-                dynamicParameters.Add("@customerId", item);
-                var sqlCommand = $"DELETE FROM Customer WHERE CustomerId=@customerId";
-                dbConnection.Execute(sqlCommand, dynamicParameters);
+                return false;
             }
-
-            
-
-            return customer;
-        }
-
-        public List<Customer> Filter(string filterName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Customer> GetAll()
-        {
-            try
+            else
             {
-                var connectionString = "Host = 47.241.69.179;" +
-                "Database =  MF955_DuyLe_CukCuk;" +
-                "User Id = dev;" +
-                "Password = 12345678";
-
-                // 2. Khởi tạo đối tượng kết nối với database
-                IDbConnection dbConnection = new MySqlConnection(connectionString);
-
-                // 3. Lấy dữ liệu
-                var sqlCommand = "SELECT * FROM Customer";
-                var customers = dbConnection.Query<object>(sqlCommand);
-
-                // Trả về cho client
-                return (List<Customer>)customers;
+                return true;
             }
-            catch (Exception ex)
-            {
-                var errObj = new
-                {
-                    devMsg = ex.Message,
-                    userMsg = CulCuk.Infractructure.Properties.Resources.Exception_ErrorMsg,
-
-                    errorCode = "misa-001",
-                    //moreInfor = "...",
-                    //traceId = "",
-                };
-                return errObj;
-            }
-
         }
     }
 
-        public Customer GetById(Guid? customerId)
-        {
-            throw new NotImplementedException();
-        }
+    #endregion 
 
-        public int Insert(Customer customer)
-        {
-            throw new NotImplementedException();
-        }
+ }
 
-        public int Update(Guid customerId, Customer customer)
-        {
-            throw new NotImplementedException();
-        }
-    }
-}

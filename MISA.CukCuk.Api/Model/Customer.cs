@@ -79,9 +79,14 @@ namespace MISA.CukCuk.Api.Model
         public int CompanyTaxCode { get; set; }
 
         /// <summary>
-        /// Đang dừng theo dõi
+        /// Đang dừng công việc
         /// </summary>
         public int IsStopFollow { get; set; }
+
+        /// <summary>
+        /// id nhóm khách hàng
+        /// </summary>
+        public Guid? CustomerGroupId { get; set; }
         #endregion
     }
 }

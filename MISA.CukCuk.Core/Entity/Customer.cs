@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MISA.CukCuk.Core.MISAAttribute;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace MISA.CukCuk.Core.Entity
         /// <summary>
         /// Mã khách hàng
         /// </summary>
+
         public string CustomerCode { get; set; }
 
         /// <summary>
@@ -66,7 +68,7 @@ namespace MISA.CukCuk.Core.Entity
         /// <summary>
         /// Mã thành viên
         /// </summary>
-        public Guid MemberCardCode { get; set; }
+        public string MemberCardCode { get; set; }
 
         /// <summary>
         /// Tên công ty
@@ -82,6 +84,11 @@ namespace MISA.CukCuk.Core.Entity
         /// Đang dừng theo dõi
         /// </summary>
         public int IsStopFollow { get; set; }
+
+        /// <summary>
+        /// id nhóm khách hàng
+        /// </summary>
+        public Guid? CustomerGroupId { get; set; }
         #endregion
     }
 }

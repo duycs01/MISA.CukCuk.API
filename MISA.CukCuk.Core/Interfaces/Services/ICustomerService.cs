@@ -7,26 +7,15 @@ using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Core.Interfaces.Services
 {
-    public interface ICustomerServices
+    public interface ICustomerServices: IBaseService<Customer>
     {
-
         /// <summary>
-        /// Thêm thông tin khách hàng
+        /// Xóa danh sách thông tin khách hàng
         /// </summary>
-        /// <param name="customer">Thông tin khách hàng</param>
-        /// <returns>ServiceResult - Kết quả sử lí qua nghiệp vụ</returns>
+        /// <param name="listId">danh sách id khách hàng</param>
+        /// <returns></returns>
         /// Created by: duylv-14/8/2021
-        ServiceResult Insert(Customer customer);
-
-        /// <summary>
-        /// Sửa thông tin khách hàng
-        /// </summary>
-        /// <param name="customerId">Id khách hàng</param>
-        /// <param name="customer">Thông tin khách hàng</param>
-        /// <returns>ServiceResult - Kết quả sử lí qua nghiệp vụ</returns>
-        /// Created by: duylv-14/8/2021
-        ServiceResult Update(Guid customerId,Customer customer);
-
-       
+        int DeleteListId(List<Guid> listId);
+        bool CheckDuplicate(string customerCode);
     }
 }

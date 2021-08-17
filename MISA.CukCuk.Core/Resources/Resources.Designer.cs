@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MISA.CukCuk.Api.Properties {
+namespace MISA.CukCuk.Core.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace MISA.CukCuk.Api.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MISA.CukCuk.Api.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MISA.CukCuk.Core.Resources.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -169,11 +169,11 @@ namespace MISA.CukCuk.Api.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Lấy dữ liệu thành công.
         /// </summary>
-        public static string Lấy_dữ_liệu_thành_công {
+        public static string success {
             get {
-                return ResourceManager.GetString("Lấy dữ liệu thành công", resourceCulture);
+                return ResourceManager.GetString("success", resourceCulture);
             }
         }
         
