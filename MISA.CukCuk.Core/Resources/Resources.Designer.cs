@@ -169,6 +169,24 @@ namespace MISA.CukCuk.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CustomerCode.
+        /// </summary>
+        public static string Name_CustomerCode {
+            get {
+                return ResourceManager.GetString("Name_CustomerCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EmployeeCode.
+        /// </summary>
+        public static string Name_EmployeeCode {
+            get {
+                return ResourceManager.GetString("Name_EmployeeCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lấy dữ liệu thành công.
         /// </summary>
         public static string success {

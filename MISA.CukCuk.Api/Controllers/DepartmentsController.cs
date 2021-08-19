@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
-using MISA.CukCuk.Api.Model;
+using MISA.CukCuk.Core.Entity;
 using MySqlConnector;
 using System;
 using System.Collections.Generic;

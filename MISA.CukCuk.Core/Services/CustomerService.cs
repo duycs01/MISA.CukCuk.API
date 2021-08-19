@@ -13,15 +13,10 @@ namespace MISA.CukCuk.Core.Services
     public class CustomerService : BaseService<Customer>, ICustomerServices
     {
         ICustomerRepository _customerRepository;
-        ServiceResult _serviceResult;
-        public CustomerService(IBaseRepository<Customer> baseRepository) : base(baseRepository)
-        {
-            _serviceResult = new ServiceResult();
-        }
 
-        public bool CheckDuplicate(string customerCode)
+        public CustomerService(ICustomerRepository customerRepository) : base(customerRepository)
         {
-           return _customerRepository.CheckDuplicate(customerCode)
+            _customerRepository = customerRepository;
         }
 
         public int DeleteListId(List<Guid> listId)
@@ -29,54 +24,42 @@ namespace MISA.CukCuk.Core.Services
             throw new NotImplementedException();
         }
 
+        public Paging GetCustomerPaging(string filterName, Guid? customerGroupId, int pageSize, int pageIndex)
+        {
+            return _customerRepository.GetCustomerPaging(filterName, customerGroupId, pageSize, pageIndex);
+        }
+
         protected override bool ValidateCustom(Customer customer)
         {
-            return false;
-            //// Mã nhân viên bắt buộc phải có
-            //if (customer.CustomerCode == "" || customer.CustomerCode == null)
-            //{
-            //    var errObj = new
-            //    {
-            //        devMsg = Resources.Resources.EmtyNull_CustomerCode,
-            //        userMsg = Resources.Resources.EmtyNull_CustomerCode,
-            //        //errorCode = "misa-001",
-            //        //moreInfor = "...",
-            //        //traceId = "1232",
-            //    };
-            //     _serviceResult.Messenger = errObj;
-            //    return false;
-            //}
 
-            //// Kiểm tra trùng mã
-            //var duplicate =  checkDuplicate(customer.CustomerCode);
-            //if (employeeCode == true)
-            //{
-            //    var errObj = new
-            //    {
-            //        devMsg = MISA.CukCuk.Core.Resources.Resources.Duplicate_EmployeeCode,
-            //        userMsg = MISA.CukCuk.Core.Resources.Resources.Duplicate_EmployeeCode,
-            //        //errorCode = "misa-001",
-            //        //moreInfor = "...",
-            //        //traceId = "1232",
-            //    };
-            //    return StatusCode(400, errObj);
-            //}
+            // Kiểm tra trùng mã
+            var duplicate = _customerRepository.CheckDuplicate(customer.CustomerCode);
+            if (_serviceResult.IsValid == true && duplicate == true)
+            {
+                var data = new
+                {
+                    PropertyName = Resources.Resources.Name_CustomerCode,
+                    ErrorInfo = Resources.Resources.Duplicate_CustomerCode,
+                };
+                _serviceResult.Data = data;
+                _serviceResult.Messenger = Resources.Resources.Duplicate_CustomerCode;
+                _serviceResult.IsValid = false;
+            }
 
-            //var regex = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
-            //bool isValid = Regex.IsMatch(employees.Email, regex, RegexOptions.IgnoreCase);
-            //if (isValid)
-            //{
-            //    var errObj = new
-            //    {
-            //        devMsg = MISA.CukCuk.Core.Resources.Resources.Error_Email,
-            //        userMsg = MISA.CukCuk.Core.Resources.Resources.Error_Email,
-            //        //errorCode = "misa-001",
-            //        //moreInfor = "...",
-            //        //traceId = "1232",
-            //    };
-            //    return StatusCode(400, errObj);
-            //}
-            //return base.ValidateCustom();
+            var regex = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
+            bool testEmail = Regex.IsMatch(customer.Email, regex, RegexOptions.IgnoreCase);
+            if (_serviceResult.IsValid == true && testEmail)
+            {
+                var data = new
+                {
+                    PropertyName = Resources.Resources.Name_CustomerCode,
+                    ErrorInfo = Resources.Resources.Error_Email,
+                };
+                _serviceResult.Data = data;
+                _serviceResult.Messenger = Resources.Resources.Duplicate_CustomerCode;
+                _serviceResult.IsValid = false;
+            }
+            return _serviceResult.IsValid;
         }
     }
 }

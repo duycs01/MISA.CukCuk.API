@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using MISA.CukCuk.Core.Interfaces.Repository;
 using MISA.CukCuk.Core.Interfaces.Services;
 using MISA.CukCuk.Core.Services;
+using MISA.CukCuk.Infractructure.Repositories;
 using MISA.CulCuk.Infractructure.Repositories;
 using System;
 using System.Collections.Generic;
@@ -41,8 +42,16 @@ namespace MISA.CukCuk.Api
                 jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
             });
 
+
+         
             services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<ICustomerServices, CustomerService>();
+
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IEmployeeServices, EmployeeService>();
 
         }
 

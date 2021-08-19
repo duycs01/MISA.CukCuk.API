@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Core.Interfaces.Services
 {
-    public interface ICustomerServices: IBaseService<Customer>
+    public interface ICustomerServices : IBaseService<Customer>
     {
         /// <summary>
         /// Xóa danh sách thông tin khách hàng
@@ -16,6 +16,6 @@ namespace MISA.CukCuk.Core.Interfaces.Services
         /// <returns></returns>
         /// Created by: duylv-14/8/2021
         int DeleteListId(List<Guid> listId);
-        bool CheckDuplicate(string customerCode);
+
     }
 }

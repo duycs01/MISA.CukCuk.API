@@ -7,14 +7,9 @@ using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Core.Interfaces.Repository
 {
-    public interface ICustomerRepository
+    public interface ICustomerRepository: IBaseRepository<Customer>
     {
-        /// <summary>
-        /// Lấy tất cả khách hàng
-        /// </summary>
-        /// <returns>Trả ra danh sách khách hàng</returns>
-        /// Created by: duylv-14/8/2021
-        List<Customer> GetAll();
+ 
 
         /// <summary>
         /// Lọc khách hàng theo theo tiêu chí
@@ -24,39 +19,7 @@ namespace MISA.CukCuk.Core.Interfaces.Repository
         /// Created by: duylv-14/8/2021
         List<Customer> Filter(string filterName);
 
-        /// <summary>
-        /// Lấy thông tin khách hàng theo id
-        /// </summary>
-        /// <param name="customerId">Id của khách hàng</param>
-        /// <returns>Trả ra thông tin khách hàng</returns>
-        /// Created by: duylv-14/8/2021
-        Customer GetById(Guid? customerId);
-
-        /// <summary>
-        /// Thêm thông tin khách hàng
-        /// </summary>
-        /// <param name="customer">Thông tin khách hàng</param>
-        /// <returns></returns>
-        /// Created by: duylv-14/8/2021
-        int Insert(Customer customer);
-
-        /// <summary>
-        /// Sửa thông tin khách hàng
-        /// </summary>
-        /// <param name="customerId">Id khách hàng</param>
-        /// <param name="customer">Thông tin khách hàng</param>
-        /// <returns></returns>
-        /// Created by: duylv-14/8/2021
-        int Update(Guid customerId, Customer customer);
-
-        /// <summary>
-        /// Xóa thông tin khách hàng
-        /// </summary>
-        /// <param name="customerId">Id khách hàng</param>
-        /// <returns></returns>
-        /// Created by: duylv-14/8/2021
-        int DeleteById(Guid customerId);
-
+        
         /// <summary>
         /// Xóa danh sách thông tin khách hàng
         /// </summary>
@@ -64,6 +27,17 @@ namespace MISA.CukCuk.Core.Interfaces.Repository
         /// <returns></returns>
         /// Created by: duylv-14/8/2021
         int DeleteListId(List<Guid> listId);
+
+        /// <summary>
+        /// Kiểm tra trùng mã khách hàng
+        /// </summary>
+        /// <param name="customerCode">Mã khách hàng</param>
+        /// <returns></returns>
+        /// Created by: duylv-14/8/2021
+        bool CheckDuplicate(string customerCode);
+
+        Paging GetCustomerPaging(string filterName, Guid? customerGroupId, int pageSize, int pageIndex);
+
     }
 
 }

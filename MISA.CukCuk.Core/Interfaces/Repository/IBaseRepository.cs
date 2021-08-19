@@ -38,7 +38,7 @@ namespace MISA.CukCuk.Core.Interfaces.Repository
         /// <param name="entity">Thông tin dữ liệu</param>
         /// <returns></returns>
         /// Created by: duylv-14/8/2021
-        int Update(MISAEntity entity);
+        int Update(Guid entityId, MISAEntity entity);
 
         /// <summary>
         /// Xóa thông tin dữ liệu

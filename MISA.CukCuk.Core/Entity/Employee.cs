@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static MISA.CukCuk.Core.MISAAttribute.MISAAttribute;
 
 namespace MISA.CukCuk.Core.Entity
 {
@@ -13,38 +14,52 @@ namespace MISA.CukCuk.Core.Entity
         /// </summary>
         public Guid EmployeeId { get; set; }
 
+        [MISARequired("Mã khách hàng")]
         /// <summary>
         /// Mã khách hàng
         /// </summary>
         public string EmployeeCode { get; set; }
+
         /// <summary>
         /// Họ và đệm
         /// </summary>
         public string FirstName { get; set; }
+
         /// <summary>
         /// Tên
         /// </summary>
         public string LastName { get; set; }
+
+        [MISARequired("Họ và tên")]
         /// <summary>
         /// Tên đầy đủ
         /// </summary>
         public string FullName { get; set; }
+
         /// <summary>
         /// Giới tính
         /// </summary>
         public int? Gender { get; set; }
+
         /// <summary>
         /// Địa chỉ
         /// </summary>
         public string Address { get; set; }
+
+        [MISADateTime("Ngày sinh")]
         /// <summary>
         /// Ngày sinh
         /// </summary>
-        public DateTime? DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
+
+        [MISARequired("Email")]
+
         /// <summary>
         /// Email
         /// </summary>
         public string Email { get; set; }
+
+        [MISARequired("Số điện thoại")]
         /// <summary>
         /// Số điện thoại
         /// </summary>
@@ -60,6 +75,7 @@ namespace MISA.CukCuk.Core.Entity
         /// </summary>
         public int IdentityNumber { get; set; }
 
+        [MISADateTime("Ngày cấp CMTND")]
         /// <summary>
         /// Ngày cấp Số chưng minh / căn cước
         /// </summary>
@@ -70,6 +86,7 @@ namespace MISA.CukCuk.Core.Entity
         /// </summary>
         public string IdentityPlace { get; set; }
 
+        [MISADateTime("Ngày gia nhập")]
         /// <summary>
         /// Ngày gia nhập
         /// </summary>

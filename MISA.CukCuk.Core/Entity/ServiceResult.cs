@@ -13,7 +13,7 @@ namespace MISA.CukCuk.Core.Entity
 
         public object Data { get; set; }
 
-        public object Messenger { get; set; }
+        public string Messenger { get; set; }
         #endregion
     }
 }

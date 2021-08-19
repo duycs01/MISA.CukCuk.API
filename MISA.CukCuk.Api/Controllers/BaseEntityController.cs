@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MISA.CukCuk.Core.Entity;
+using MISA.CukCuk.Core.Interfaces.Repository;
 using MISA.CukCuk.Core.Interfaces.Services;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,14 @@ namespace MISA.CukCuk.Api.Controllers
     public class BaseEntityController<MISAEntity> : ControllerBase
     {
         IBaseService<MISAEntity> _baseService;
-        ServiceResult _serviceResult;
+        IBaseRepository<MISAEntity> _baseRepository;
 
-        public BaseEntityController(IBaseService<MISAEntity> baseService)
+        protected ServiceResult _serviceResult;
+
+        public BaseEntityController(IBaseService<MISAEntity> baseService, IBaseRepository<MISAEntity> baseRepository)
         {
             _baseService = baseService;
+            _baseRepository = baseRepository;
             _serviceResult = new ServiceResult();
         }
 
@@ -28,12 +32,19 @@ namespace MISA.CukCuk.Api.Controllers
         /// <returns>Trả về danh sách dữ liệu</returns>
         /// Created by: duylv 16/08/2021
         [HttpGet]
-        public IActionResult GetAll()
+        public virtual IActionResult GetAll()
         {
             try
             {
-                _serviceResult.Data = _baseService.GetAll();
-                return StatusCode(200, _serviceResult);
+                var res = _baseService.GetAll();
+                if (res.IsValid == true)
+                {
+                    return StatusCode(200, res.Data);
+                }
+                else
+                {
+                    return StatusCode(400, res.Data);
+                }
             }
             catch (Exception ex)
             {
@@ -42,7 +53,7 @@ namespace MISA.CukCuk.Api.Controllers
                     devMsg = ex.Message,
                     userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
                 };
-                _serviceResult.Messenger = errObj;
+                _serviceResult.Data = errObj;
                 return StatusCode(500, _serviceResult);
 
             }
@@ -58,8 +69,15 @@ namespace MISA.CukCuk.Api.Controllers
         {
             try
             {
-                _serviceResult.Data = _baseService.GetById(id);
-                return StatusCode(200, _serviceResult);
+                var res = _baseService.GetById(id);
+                if (res.IsValid == true)
+                {
+                    return StatusCode(200, res.Data);
+                }
+                else
+                {
+                    return StatusCode(400, res.Data);
+                }
             }
             catch (Exception ex)
             {
@@ -68,24 +86,31 @@ namespace MISA.CukCuk.Api.Controllers
                     devMsg = ex.Message,
                     userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
                 };
-                _serviceResult.Messenger = errObj;
+                _serviceResult.Data = errObj;
                 return StatusCode(500, _serviceResult);
 
             }
         }
 
         /// <summary>
-        /// Lấy thông tin dữ liệu theo id
+        /// Thêm dữ liệu
         /// </summary>
-        /// <returns>Trả thông tin dữ liệu</returns>
+        /// <returns>Trả về số hàng được thêm vào</returns>
         /// Created by: duylv 16/08/2021
         [HttpPost]
         public IActionResult Insert(MISAEntity entity)
         {
             try
             {
-                _serviceResult.Data = _baseService.Insert(entity);
-                return StatusCode(201, _serviceResult.Data);
+                var res = _baseService.Insert(entity);
+                if (res.IsValid == true)
+                {
+                    return StatusCode(200, res.Data);
+                }
+                else
+                {
+                    return StatusCode(400, res.Data);
+                }
             }
             catch (Exception ex)
             {
@@ -94,7 +119,7 @@ namespace MISA.CukCuk.Api.Controllers
                     devMsg = ex.Message,
                     userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
                 };
-                _serviceResult.Messenger = errObj;
+                _serviceResult.Data = errObj;
                 return StatusCode(500, _serviceResult);
 
             }
@@ -105,13 +130,20 @@ namespace MISA.CukCuk.Api.Controllers
         /// </summary>
         /// <returns></returns>
         /// Created by: duylv 16/08/2021
-        [HttpPut]
-        public IActionResult Update(Guid id , MISAEntity entity)
+        [HttpPut("{entityId}")]
+        public IActionResult Update(Guid entityId, MISAEntity entity)
         {
             try
             {
-                _serviceResult.Data = _baseService.Update(id, entity);
-                return StatusCode(200, _serviceResult);
+                var res = _baseService.Update(entityId, entity);
+                if (res.IsValid == true)
+                {
+                    return StatusCode(200, res.Data);
+                }
+                else
+                {
+                    return StatusCode(400, res);
+                }
             }
             catch (Exception ex)
             {
@@ -120,7 +152,7 @@ namespace MISA.CukCuk.Api.Controllers
                     devMsg = ex.Message,
                     userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
                 };
-                _serviceResult.Messenger = errObj;
+                _serviceResult.Data = errObj;
                 return StatusCode(500, _serviceResult);
 
             }
@@ -131,13 +163,20 @@ namespace MISA.CukCuk.Api.Controllers
         /// </summary>
         /// <returns></returns>
         /// Created by: duylv 16/08/2021
-        [HttpDelete]
-        public IActionResult DeleteById(Guid id)
+        [HttpDelete("{entityId}")]
+        public IActionResult DeleteById(Guid entityId)
         {
             try
             {
-                _serviceResult.Data = _baseService.DeleteById(id);
-                return StatusCode(200, _serviceResult);
+               var res = _baseService.DeleteById(entityId);
+                if (res.IsValid == true)
+                {
+                    return StatusCode(200, res.Data);
+                }
+                else
+                {
+                    return StatusCode(400, res.Data);
+                }
             }
             catch (Exception ex)
             {
@@ -146,7 +185,7 @@ namespace MISA.CukCuk.Api.Controllers
                     devMsg = ex.Message,
                     userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
                 };
-                _serviceResult.Messenger = errObj;
+                _serviceResult.Data = errObj;
                 return StatusCode(500, _serviceResult);
 
             }

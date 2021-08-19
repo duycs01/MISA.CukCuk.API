@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static MISA.CukCuk.Core.MISAAttribute.MISAAttribute;
 
 namespace MISA.CukCuk.Core.Entity
 {
@@ -18,6 +19,7 @@ namespace MISA.CukCuk.Core.Entity
         /// Mã khách hàng
         /// </summary>
 
+        [MISARequired("Mã khách hàng")]
         public string CustomerCode { get; set; }
 
         /// <summary>
@@ -30,6 +32,7 @@ namespace MISA.CukCuk.Core.Entity
         /// </summary>
         public string LastName { get; set; }
 
+        [MISARequired("Họ và tên")]
         /// <summary>
         /// Tên đầy đủ
         /// </summary>
@@ -50,11 +53,13 @@ namespace MISA.CukCuk.Core.Entity
         /// </summary>
         public DateTime? DateOfBirth { get; set; }
 
+        [MISARequired("Email")]
         /// <summary>
         /// Email
         /// </summary>
         public string Email { get; set; }
 
+        [MISARequired("Số điện thoại")]
         /// <summary>
         /// Số điện thoại
         /// </summary>
@@ -81,7 +86,7 @@ namespace MISA.CukCuk.Core.Entity
         public int CompanyTaxCode { get; set; }
 
         /// <summary>
-        /// Đang dừng theo dõi
+        /// Đang dừng hoạt động
         /// </summary>
         public int IsStopFollow { get; set; }
 

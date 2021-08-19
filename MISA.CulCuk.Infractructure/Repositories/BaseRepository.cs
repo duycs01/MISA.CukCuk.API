@@ -9,15 +9,16 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MISA.CukCuk.Core.MISAAttribute.MISAAttribute;
 
 namespace MISA.CulCuk.Infractructure.Repositories
 {
-    public class BaseRepository<MISAEntity> : IBaseRepository<MISAEntity>
+    public class BaseRepository<MISAEntity> : IBaseRepository<MISAEntity>, IDisposable
     {
         #region DECLEAR
         IConfiguration _configuration;
         string _connectionString = string.Empty;
-        IDbConnection _dbConnection = null;
+        protected IDbConnection _dbConnection;
         string _tableName;
         #endregion
 
@@ -31,6 +32,7 @@ namespace MISA.CulCuk.Infractructure.Repositories
             _connectionString = _configuration.GetConnectionString("MISACukCukConnectionString");
             _dbConnection = new MySqlConnection(_connectionString);
              _tableName = typeof(MISAEntity).Name;
+            _dbConnection.Open();
 
         }
         #region Method
@@ -58,24 +60,45 @@ namespace MISA.CulCuk.Infractructure.Repositories
             var _tableName = typeof(MISAEntity).Name;
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add($"@{_tableName}Id", entityId);
-            var sqlCommand = $"SELECT * FROM {_tableName}";
-            var res = _dbConnection.QueryFirstOrDefault(sqlCommand);
-            return res;
+            var sqlCommand = $"SELECT * FROM {_tableName} WHERE {_tableName}Id = @{_tableName}Id LIMIT 1";
+            var rowEffect = _dbConnection.QueryFirstOrDefault<MISAEntity>(sqlCommand,param: parameters);
+            return rowEffect ;
         }
 
-        public int Insert(MISAEntity entity)
+        public int Insert( MISAEntity entity)
         {
+            var transaction = _dbConnection.BeginTransaction();
             var properties = entity.GetType().GetProperties();
-            properties[0].SetValue(entity, Guid.NewGuid()); 
+            foreach (var prop in properties)
+            {
+                if(prop.Name == $"{_tableName}Id")
+                {
+                    prop.SetValue(entity, Guid.NewGuid());
+                }
+            }
             var parameters = MappingDBType(entity);
             var res = _dbConnection.Execute($"Proc_Insert{_tableName}", parameters,commandType:CommandType.StoredProcedure);
+            //var rowEffects = 0;
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    rowEffects += _dbConnection.Execute($"Proc_Insert{_tableName}", parameters, commandType: CommandType.StoredProcedure);
+            //}
+            //transaction.Commit();
             return res;
         }
 
-        public int Update(MISAEntity entity)
+        public int Update(Guid id, MISAEntity entity)
         {
+            var properties = entity.GetType().GetProperties();
+            foreach (var prop in properties)
+            {
+                if (prop.Name == $"{_tableName}Id")
+                {
+                    prop.SetValue(entity, id);
+                }
+            }
             var parameters = MappingDBType(entity);
-            var res = _dbConnection.Execute($"Proc_Update{_tableName}", parameters);
+            var res = _dbConnection.Execute($"Proc_Update{_tableName}", parameters, commandType:CommandType.StoredProcedure);
             return res;
         }
 
@@ -106,6 +129,15 @@ namespace MISA.CulCuk.Infractructure.Repositories
                 }
             }
             return dynamicParameters;
+        }
+
+        public void Dispose()
+        {
+            if(_dbConnection != null && _dbConnection.State == ConnectionState.Open)
+            {
+                _dbConnection.Close();
+                _dbConnection.Dispose();
+            }
         }
         #endregion
 

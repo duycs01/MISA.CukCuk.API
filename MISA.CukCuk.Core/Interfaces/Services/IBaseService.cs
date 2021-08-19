@@ -29,8 +29,8 @@ namespace MISA.CukCuk.Core.Interfaces.Services
         /// </summary>
         /// <param name="entity">Thông tin dữ liệu</param>
         /// <returns>ServiceResult - Kết quả sử lí qua nghiệp vụ</returns>
-        /// Created by: duylv-14/8/2021
-        ServiceResult Insert (MISAEntity entity);
+        /// Created by: duylv-14/8/2021 
+        ServiceResult Insert(MISAEntity entity);
 
         /// <summary>
         /// Sửa thông tin dữ liệu
@@ -39,7 +39,7 @@ namespace MISA.CukCuk.Core.Interfaces.Services
         /// <param name="entity">Thông tin dữ liệu</param>
         /// <returns>ServiceResult - Kết quả sử lí qua nghiệp vụ</returns>
         /// Created by: duylv-14/8/2021
-        ServiceResult Update (Guid id, MISAEntity entity);
+        ServiceResult Update (Guid entityId, MISAEntity entity);
 
         /// <summary>
         /// Xóa thông tin dữ liệu
