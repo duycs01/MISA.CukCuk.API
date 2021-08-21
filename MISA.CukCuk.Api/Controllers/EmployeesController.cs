@@ -6,6 +6,7 @@ using MISA.CukCuk.Core.Interfaces.Repository;
 using MISA.CukCuk.Core.Interfaces.Services;
 using MySqlConnector;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -59,6 +60,36 @@ namespace MISA.CukCuk.Api.Controllers
          
         }
        
+        [HttpDelete]
+        public IActionResult DeleteListId([FromBody] dynamic listId)
+        {
+
+            try
+            {
+                var listEmployeeId = JObject.Parse(listId.ToString());
+                var res = _employeeRepository.DeleteListId(listEmployeeId);
+
+                if (res.Data.Count > 0)
+                {
+                    return StatusCode(200, res);
+                }
+                else
+                {
+                    return StatusCode(204, res);
+                }
+            }
+            catch (Exception ex)
+            {
+                var errObj = new
+                {
+                    devMsg = ex.Message,
+                    userMsg = MISA.CukCuk.Core.Resources.Resources.Exception_ErrorMsg,
+                };
+                _serviceResult.Data = errObj;
+                return StatusCode(500, _serviceResult);
+            }
+        }
+
+    }
     }
 
-}

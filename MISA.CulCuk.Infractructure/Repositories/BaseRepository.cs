@@ -19,7 +19,7 @@ namespace MISA.CulCuk.Infractructure.Repositories
         IConfiguration _configuration;
         string _connectionString = string.Empty;
         protected IDbConnection _dbConnection;
-        string _tableName;
+         string _tableName;
         #endregion
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace MISA.CulCuk.Infractructure.Repositories
             _connectionString = _configuration.GetConnectionString("MISACukCukConnectionString");
             _dbConnection = new MySqlConnection(_connectionString);
              _tableName = typeof(MISAEntity).Name;
-            _dbConnection.Open();
+                //_dbConnection.Open();
 
         }
         #region Method
@@ -77,7 +77,7 @@ namespace MISA.CulCuk.Infractructure.Repositories
                 }
             }
             var parameters = MappingDBType(entity);
-            var res = _dbConnection.Execute($"Proc_Insert{_tableName}", parameters,commandType:CommandType.StoredProcedure);
+            var res = _dbConnection.Execute($"Proc_Insert{_tableName}", parameters, commandType:CommandType.StoredProcedure);
             //var rowEffects = 0;
             //for (int i = 0; i < 10; i++)
             //{
@@ -102,7 +102,7 @@ namespace MISA.CulCuk.Infractructure.Repositories
             return res;
         }
 
-        private DynamicParameters MappingDBType(MISAEntity entity)
+        protected DynamicParameters MappingDBType(MISAEntity entity)
         {
             //Đọc từng property của object:
             var properties = entity.GetType().GetProperties();

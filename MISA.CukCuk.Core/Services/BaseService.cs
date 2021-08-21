@@ -124,9 +124,6 @@ namespace MISA.CukCuk.Core.Services
                 }
 
             }
-
-
-
             return _serviceResult.IsValid;
         }
 

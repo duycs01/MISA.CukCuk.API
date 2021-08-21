@@ -1,5 +1,7 @@
-﻿using MISA.CukCuk.Core.Entity;
+﻿using Microsoft.Extensions.Configuration;
+using MISA.CukCuk.Core.Entity;
 using MISA.CukCuk.Core.Interfaces.Repository;
+using MISA.CulCuk.Infractructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,41 +10,11 @@ using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Infractructure.Repositories
 {
-    public class CustomerGroupRepository : ICustomerGroupRepository
+    public class CustomerGroupRepository : BaseRepository<CustomerGroup>, ICustomerGroupRepository
     {
-        public int DeleteById(Guid customerGroupId)
+        public CustomerGroupRepository(IConfiguration configuration):base(configuration)
         {
-            throw new NotImplementedException();
-        }
 
-        public int DeleteListId(List<Guid> listId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<CustomerGroup> Filter(string filterName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<CustomerGroup> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public CustomerGroup GetById(Guid? customerGroupId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Insert(CustomerGroup customerGroup)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Update(Guid customerGroupId, CustomerGroup customerGroup)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿using MISA.CukCuk.Core.Entity;
+﻿using Microsoft.AspNetCore.Http;
+using MISA.CukCuk.Core.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Core.Interfaces.Services
@@ -16,6 +18,6 @@ namespace MISA.CukCuk.Core.Interfaces.Services
         /// <returns></returns>
         /// Created by: duylv-14/8/2021
         int DeleteListId(List<Guid> listId);
-
+        ServiceResult Import(IFormFile formFile, CancellationToken cancellationToken);
     }
 }

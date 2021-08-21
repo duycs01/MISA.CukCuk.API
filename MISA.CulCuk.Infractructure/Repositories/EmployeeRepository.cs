@@ -49,6 +49,8 @@ namespace MISA.CukCuk.Infractructure.Repositories
             DynamicParameters dynamicParameters = new DynamicParameters();
 
             dynamicParameters.Add("@employeeCode", employeeCode);
+            dynamicParameters.Add("@PhoneNumber", employeeCode);
+            dynamicParameters.Add("@Email", employeeCode);
 
             var sqlCommand = "SELECT * FROM Employee WHERE EmployeeCode = @employeeCode";
 
@@ -62,6 +64,11 @@ namespace MISA.CukCuk.Infractructure.Repositories
             {
                 return false;
             }
+        }
+
+        public int DeleteListId(List<string> listId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

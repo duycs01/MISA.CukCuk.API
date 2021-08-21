@@ -151,6 +151,15 @@ namespace MISA.CukCuk.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vui lòng chọn tệp khác.
+        /// </summary>
+        public static string Error_ImportFile {
+            get {
+                return ResourceManager.GetString("Error_ImportFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Số điện thoại không đúng định dạng.
         /// </summary>
         public static string Error_PhoneNumber {

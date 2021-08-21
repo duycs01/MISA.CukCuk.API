@@ -8,24 +8,8 @@ using System.Threading.Tasks;
 namespace MISA.CukCuk.Core.Interfaces.Services
 {
 
-    public interface ICustomerGroupServices
+    public interface ICustomerGroupServices: IBaseService<CustomerGroup>
     {
-        /// <summary>
-        /// Thêm thông tin nhóm khách hàng
-        /// </summary>
-        /// <param name="customerGroup">Thông tin nhóm khách hàng</param>
-        /// <returns>ServiceResult - Kết quả sử lí qua nghiệp vụ</returns>
-        /// Created by: duylv-14/8/2021
-        ServiceResult Insert(CustomerGroup customerGroup);
-
-        /// <summary>
-        /// Sửa thông tin nhóm khách hàng
-        /// </summary>
-        /// <param name="customerGroupId">Id nhóm khách hàng</param>
-        /// <param name="customerGroup">Thông tin nhóm khách hàng</param>
-        /// <returns>ServiceResult - Kết quả sử lí qua nghiệp vụ</returns>
-        /// Created by: duylv-14/8/2021
-        ServiceResult Update(Guid customerGroupId, CustomerGroup customerGroup);
-
+       
     }
 }

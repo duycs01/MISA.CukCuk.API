@@ -94,6 +94,11 @@ namespace MISA.CukCuk.Core.Entity
         /// id nhóm khách hàng
         /// </summary>
         public Guid? CustomerGroupId { get; set; }
+
+        [MISANotMap]
+        public string CustomerGroupName { get; set; }
+        [MISANotMap]
+        public List<string> ImportError { get; set; } = new List<string>();
         #endregion
     }
 }

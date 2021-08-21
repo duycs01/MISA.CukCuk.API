@@ -9,31 +9,13 @@ using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Core.Services
 {
-    public class PositionService : IPositionServices
+    public class PositionService : BaseService<Position>,IPositionServices
     {
         IPositionRepository _positionRepository ;
-        ServiceResult _serviceResult;
-        public PositionService()
+        public PositionService(IPositionRepository positionRepository):base(positionRepository)
         {
-            _serviceResult = new ServiceResult();
+            _positionRepository = positionRepository;
         }
-        public ServiceResult Insert(Position position)
-        {
-            //Sử lí nghiệp vụ
-
-            //Kết nối database
-            _serviceResult.Data = _positionRepository.Insert(position);
-            return _serviceResult;
-
-        }
-
-        public ServiceResult Update(Guid positionId, Position position)
-        {
-            //Sử lí nghiệp vụ
-
-            //Kết nối database
-            _serviceResult.Data = _positionRepository.Insert(position);
-            return _serviceResult;
-        }
+       
     }
 }

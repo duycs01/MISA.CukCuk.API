@@ -24,6 +24,13 @@ namespace MISA.CukCuk.Core.Services
         {
             throw new NotImplementedException();
         }
+        /// <summary>
+        /// Validate dữ liệu riêng
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <returns></returns>
+        /// Created by: duylv - 18/08/2021
+        /// 
         protected override bool ValidateCustom(Employee employee)
         {
 
