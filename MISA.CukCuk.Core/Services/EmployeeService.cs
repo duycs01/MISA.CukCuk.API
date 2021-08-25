@@ -55,13 +55,13 @@ namespace MISA.CukCuk.Core.Services
             if (numbVal.Length > 0)
                 numb = Int32.Parse(numbVal) + 1;
 
-            var res = $"{strVal}{numb}" ;
+            var res = string.Empty;
 
             var checkDuplicate = _employeeRepository.CheckDuplicate(null, res);
-            if (checkDuplicate)
+            do
             {
-                NewCode();
-            }
+                res = $"{strVal}{numb + 1}";
+            } while (checkDuplicate);
             return res;
         }
 

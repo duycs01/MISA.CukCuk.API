@@ -52,7 +52,6 @@ namespace MISA.CukCuk.Api.Controllers
             try
             {
 
-
                 var res = _employeeRepository.GetEmployeePaging(filterName, positionId, departmentId, pageSize, pageIndex);
                 if (res.Data.Count > 0)
                 {
