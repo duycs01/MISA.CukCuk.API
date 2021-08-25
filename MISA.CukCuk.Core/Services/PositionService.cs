@@ -11,10 +11,12 @@ namespace MISA.CukCuk.Core.Services
 {
     public class PositionService : BaseService<Position>,IPositionServices
     {
-        IPositionRepository _positionRepository ;
+        /// <summary>
+        /// Hàm khởi tạo
+        /// </summary>
+        /// <param name="positionRepository"></param>
         public PositionService(IPositionRepository positionRepository):base(positionRepository)
         {
-            _positionRepository = positionRepository;
         }
        
     }

@@ -10,22 +10,22 @@ namespace MISA.CukCuk.Core.Entity
         #region Property
 
         /// <summary>
-        ///  Ngày tạo dữ liệu
+        ///  Ngày tạo bản ghi
         /// </summary>
         public DateTime? CreatedDate { get; set; }
         
         /// <summary>
-        /// Người tạo dữ liệu
+        /// Người tạo bản ghi
         /// </summary>
         public string CreatedBy { get; set; }
 
         /// <summary>
-        /// Ngày sửa dữ liệu
+        /// Ngày sửa bản ghi
         /// </summary>
         public DateTime? ModifiedDate { get; set; }
 
         /// <summary>
-        /// Người sửa dữ liệu
+        /// Người sửa bản ghi
         /// </summary>
         public string ModifiedBy { get; set; }
         #endregion

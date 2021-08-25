@@ -12,9 +12,11 @@ namespace MISA.CukCuk.Infractructure.Repositories
 {
     public class CustomerGroupRepository : BaseRepository<CustomerGroup>, ICustomerGroupRepository
     {
+        #region Contructor
         public CustomerGroupRepository(IConfiguration configuration):base(configuration)
         {
 
         }
+        #endregion
     }
 }

@@ -148,7 +148,7 @@
     <value>Email không đúng định dạng</value>
   </data>
   <data name="Error_ImportFile" xml:space="preserve">
-    <value>Vui lòng chọn tệp khác</value>
+    <value>Tệp không phải tệp excel. Vui lòng chọn tệp khác</value>
   </data>
   <data name="Error_PhoneNumber" xml:space="preserve">
     <value>Số điện thoại không đúng định dạng</value>
@@ -163,7 +163,7 @@
     <value>EmployeeCode</value>
   </data>
   <data name="success" xml:space="preserve">
-    <value>Lấy dữ liệu thành công</value>
+    <value>Lấy bản ghi thành công</value>
   </data>
   <data name="Update_Error" xml:space="preserve">
     <value>Sửa thất bại</value>

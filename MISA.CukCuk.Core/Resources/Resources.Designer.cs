@@ -151,7 +151,7 @@ namespace MISA.CukCuk.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Vui lòng chọn tệp khác.
+        ///   Looks up a localized string similar to Tệp không phải tệp excel. Vui lòng chọn tệp khác.
         /// </summary>
         public static string Error_ImportFile {
             get {
@@ -196,7 +196,7 @@ namespace MISA.CukCuk.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lấy dữ liệu thành công.
+        ///   Looks up a localized string similar to Lấy bản ghi thành công.
         /// </summary>
         public static string success {
             get {

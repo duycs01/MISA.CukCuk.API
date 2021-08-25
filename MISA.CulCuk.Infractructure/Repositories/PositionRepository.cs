@@ -12,9 +12,12 @@ namespace MISA.CukCuk.Infractructure.Repositories
 {
     public class PositionRepository : BaseRepository<Position>, IPositionRepository
     {
+        #region Contructor
         public PositionRepository(IConfiguration configuration):base(configuration)
         {
 
         }
+        #endregion
+
     }
 }

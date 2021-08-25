@@ -9,5 +9,11 @@ namespace MISA.CukCuk.Core.Interfaces.Services
 {
     public interface IEmployeeServices : IBaseService<Employee>
     {
+        /// <summary>
+        /// lấy mã nhân viên mới
+        /// </summary>
+        /// <returns>Trả ra mã nhân viên mới</returns>
+        /// Created by: duylv - 21/08/2021
+        public string NewCode();
     }
 }

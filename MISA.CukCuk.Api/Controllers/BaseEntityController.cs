@@ -16,10 +16,14 @@ namespace MISA.CukCuk.Api.Controllers
     [ApiController]
     public class BaseEntityController<MISAEntity> : ControllerBase
     {
+        #region DECLEAR
+
         IBaseService<MISAEntity> _baseService;
         IBaseRepository<MISAEntity> _baseRepository;
-
         protected ServiceResult _serviceResult;
+        #endregion
+
+        #region Contructor
 
         public BaseEntityController(IBaseService<MISAEntity> baseService, IBaseRepository<MISAEntity> baseRepository)
         {
@@ -27,25 +31,28 @@ namespace MISA.CukCuk.Api.Controllers
             _baseRepository = baseRepository;
             _serviceResult = new ServiceResult();
         }
+        #endregion
+
+        #region Method
 
         /// <summary>
-        /// Lấy danh sách tất cả dữ liệu
+        /// Lấy danh sách tất cả bản ghi
         /// </summary>
-        /// <returns>Trả về danh sách dữ liệu</returns>
+        /// <returns>Trả về danh sách bản ghi</returns>
         /// Created by: duylv 16/08/2021
         [HttpGet]
         public virtual IActionResult GetAll()
         {
             try
             {
-                var res = _baseService.GetAll();
-                if (res.IsValid == true)
+                var res = _baseRepository.GetAll();
+                if (res.Count > 0)
                 {
-                    return StatusCode(200, res.Data);
+                    return StatusCode(200, res);
                 }
                 else
                 {
-                    return StatusCode(400, res.Data);
+                    return StatusCode(204, res);
                 }
             }
             catch (Exception ex)
@@ -62,9 +69,9 @@ namespace MISA.CukCuk.Api.Controllers
         }
 
         /// <summary>
-        /// Lấy thông tin dữ liệu theo id
+        /// Lấy thông tin bản ghi theo id
         /// </summary>
-        /// <returns>Trả thông tin dữ liệu</returns>
+        /// <returns>Trả thông tin bản ghi</returns>
         /// Created by: duylv 16/08/2021
         [HttpGet("{id}")]
         public IActionResult GetById(Guid id)
@@ -95,23 +102,23 @@ namespace MISA.CukCuk.Api.Controllers
         }
 
         /// <summary>
-        /// Thêm dữ liệu
+        /// Thêm bản ghi
         /// </summary>
         /// <returns>Trả về số hàng được thêm vào</returns>
         /// Created by: duylv 16/08/2021
         [HttpPost]
-        public IActionResult Insert(MISAEntity entity)
+        public IActionResult Insert([FromBody] MISAEntity entity)
         {
             try
             {
                 var res = _baseService.Insert(entity);
                 if (res.IsValid == true)
                 {
-                    return StatusCode(200, res.Data);
+                    return StatusCode(200, res);
                 }
                 else
                 {
-                    return StatusCode(400, res.Data);
+                    return StatusCode(400, res);
                 }
             }
             catch (Exception ex)
@@ -128,12 +135,12 @@ namespace MISA.CukCuk.Api.Controllers
         }
 
         /// <summary>
-        /// Sửa thông tin dữ liệu theo id
+        /// Sửa thông tin bản ghi theo id
         /// </summary>
         /// <returns></returns>
         /// Created by: duylv 16/08/2021
         [HttpPut("{entityId}")]
-        public IActionResult Update(Guid entityId, MISAEntity entity)
+        public IActionResult Update(Guid entityId, [FromBody] MISAEntity entity)
         {
             try
             {
@@ -161,7 +168,7 @@ namespace MISA.CukCuk.Api.Controllers
         }
 
         /// <summary>
-        /// Xóa thông tin dữ liệu theo id
+        /// Xóa thông tin bản ghi theo id
         /// </summary>
         /// <returns></returns>
         /// Created by: duylv 16/08/2021
@@ -192,5 +199,6 @@ namespace MISA.CukCuk.Api.Controllers
 
             }
         }
+        #endregion
     }
 }

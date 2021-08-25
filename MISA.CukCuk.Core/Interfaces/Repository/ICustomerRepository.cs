@@ -19,7 +19,7 @@ namespace MISA.CukCuk.Core.Interfaces.Repository
         /// <param name="listId">danh sách id khách hàng</param>
         /// <returns></returns>
         /// Created by: duylv-14/8/2021
-        int DeleteListId(dynamic listId);
+        int DeleteListId(List<Guid> listId);
 
         /// <summary>
         /// Kiểm tra trùng mã khách hàng
@@ -34,7 +34,7 @@ namespace MISA.CukCuk.Core.Interfaces.Repository
         /// </summary>
         /// <param name="filterName">tìm kiếm theo họ tên, mã khách hàng,</param>
         /// <param name="customerGroupId">id nhóm khách hàng</param>
-        /// <param name="pageSize">Số dữ liệu trên 1 trang</param>
+        /// <param name="pageSize">Số bản ghi trên 1 trang</param>
         /// <param name="pageIndex">vị trí của trang</param>
         /// <returns></returns>
         Paging GetCustomerPaging(string filterName, Guid? customerGroupId, int pageSize, int pageIndex);
@@ -44,8 +44,17 @@ namespace MISA.CukCuk.Core.Interfaces.Repository
         /// Thêm danh sách khách hàng vào hệ thống
         /// </summary>
         /// <param name="listCustomers">Danh sách khách hàng</param>
-        /// <returns></returns>
+        /// <returns>Số bản ghi thêm được</returns>
+        /// Created by: duylv - 21/08/2021
+        /// 
         int InsertListCustomer(List<Customer> listCustomers);
+
+        /// <summary>
+        /// Lấy mã khách hàng mới nhất
+        /// </summary>
+        /// <returns>Trả ra mã khách hàng mới nhất</returns>
+        /// Created by: duylv - 21/08/2021
+        public string NewCode();
     }
 
 }

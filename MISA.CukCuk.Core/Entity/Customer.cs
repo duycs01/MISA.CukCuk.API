@@ -83,7 +83,7 @@ namespace MISA.CukCuk.Core.Entity
         /// <summary>
         /// Mã số thuế công ty
         /// </summary>
-        public int CompanyTaxCode { get; set; }
+        public string CompanyTaxCode { get; set; }
 
         /// <summary>
         /// Đang dừng hoạt động
@@ -92,13 +92,44 @@ namespace MISA.CukCuk.Core.Entity
 
         /// <summary>
         /// id nhóm khách hàng
-        /// </summary>
+        /// </summary>~
         public Guid? CustomerGroupId { get; set; }
 
+        /// <summary>
+        /// Tên nhóm khách hàng
+        /// </summary>
         [MISANotMap]
         public string CustomerGroupName { get; set; }
+
+        /// <summary>
+        /// Chú ý
+        /// </summary>
         [MISANotMap]
-        public List<string> ImportError { get; set; } = new List<string>();
+        public string Attention { get; set; }
+
+        /// <summary>
+        /// Lỗi của file inport
+        /// </summary>
+        [MISANotMap]
+        public List<ImportError> ImportError { get; set; } = new List<ImportError>();
         #endregion
     }
+
+    /// <summary>
+    /// Lỗi của file inport
+    /// </summary>
+    public class ImportError {
+        /// <summary>
+        /// Lỗi của file inport
+        /// </summary>
+        /// <param name="success">Kiểm tra lỗi hay hợp lệ</param>
+        /// <param name="errorMessage">Thông báo lỗi</param>
+        public ImportError(bool success, string errorMessage)
+        {
+            this.Success = success;
+            this.ErrorMessage = errorMessage;
+        }
+        public bool Success { get; set; }
+        public string  ErrorMessage { get; set; }
+    }    
 }

@@ -9,9 +9,24 @@ namespace MISA.CukCuk.Core.Entity
     {
         #region Property
 
+        /// <summary>
+        /// Khóa chính
+        /// </summary>
         public Guid DepartmentId { get; set; }
+
+        /// <summary>
+        /// Mã phòng ban
+        /// </summary>
         public string DepartmentCode { get; set; }
+
+        /// <summary>
+        /// Tên phòng ban
+        /// </summary>
         public string DepartmentName { get; set; }
+
+        /// <summary>
+        /// Mô tả chi tiết
+        /// </summary>
         public string Description { get; set; }
         #endregion
     }

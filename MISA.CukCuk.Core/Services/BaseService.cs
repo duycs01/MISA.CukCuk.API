@@ -29,24 +29,47 @@ namespace MISA.CukCuk.Core.Services
         #endregion
 
         #region Method
+        /// <summary>
+        /// Xóa bản ghi theo id
+        /// </summary>
+        /// <param name="entityId">id bản ghi</param>
+        /// <returns>Số bản ghi xóa được</returns>
+        /// Created by: duylv - 14/08/2021
         public ServiceResult DeleteById(Guid entityId)
         {
             _serviceResult.Data = _baseRepository.DeleteById(entityId);
             return _serviceResult;
         }
 
+        /// <summary>
+        /// Lấy danh sách bản ghi
+        /// </summary>
+        /// <returns>Danh sách bản ghi</returns>
+        /// Created by: duylv - 14/08/2021
         public ServiceResult GetAll()
         {
             _serviceResult.Data = _baseRepository.GetAll();
             return _serviceResult;
         }
 
+        /// <summary>
+        /// Lấy thông tin bản ghi theo id
+        /// </summary>
+        /// <param name="entityId">id bản ghi</param>
+        /// <returns>Thông tin bản ghi</returns>
+        /// Created by: duylv - 14/08/2021
         public ServiceResult GetById(Guid entityId)
         {
             _serviceResult.Data = _baseRepository.GetById(entityId);
             return _serviceResult;
         }
 
+        /// <summary>
+        /// Thêm mới bản ghi
+        /// </summary>
+        /// <param name="entity">Thông tin bản ghi</param>
+        /// <returns>Số bản ghi thêm được</returns>
+        /// Created by: duylv - 14/08/2021
         public ServiceResult Insert(MISAEntity entity)
         {
             var isValid = ValidateData(entity);
@@ -61,6 +84,13 @@ namespace MISA.CukCuk.Core.Services
             return _serviceResult;
         }
 
+        /// <summary>
+        /// Sửa bản ghi
+        /// </summary>
+        /// <param name="entityId">id bản ghi</param>
+        /// <param name="entity">Thông tin bản ghi</param>
+        /// <returns>Số bản ghi được sửa</returns>
+        /// Created by: duylv - 14/08/2021
         public ServiceResult Update(Guid entityId, MISAEntity entity)
         {
             var isValid = ValidateData(entity);
@@ -87,9 +117,9 @@ namespace MISA.CukCuk.Core.Services
         /// Sử lí validate chung
         /// </summary>
         /// <param name="entity">Đối tượng muốn validate</param>
-        /// <returns>true dữ liệu hợp lệ - false dữ liệu không hợp lệ</returns>
+        /// <returns>true bản ghi hợp lệ - false bản ghi không hợp lệ</returns>
         /// Created by: duylv - 16/08/2021
-        private bool ValidateData(MISAEntity entity)
+        protected bool ValidateData(MISAEntity entity)
         {
             // validate Bắt buộc nhập
             var properties = entity.GetType().GetProperties();

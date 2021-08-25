@@ -50,7 +50,7 @@ namespace MISA.CukCuk.Core.Entity
         /// <summary>
         /// Ngày sinh
         /// </summary>
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         [MISARequired("Email")]
 
@@ -68,18 +68,18 @@ namespace MISA.CukCuk.Core.Entity
         /// <summary>
         /// Lương tháng
         /// </summary>
-        public string Salary { get; set; }
+        public double? Salary { get; set; }
 
         /// <summary>
         /// Số chứng minh nhân dân / căn cước
         /// </summary>
-        public int IdentityNumber { get; set; }
+        public string IdentityNumber { get; set; }
 
         [MISADateTime("Ngày cấp CMTND")]
         /// <summary>
         /// Ngày cấp Số chưng minh / căn cước
         /// </summary>
-        public DateTime IdentityDate { get; set; }
+        public DateTime? IdentityDate { get; set; }
 
         /// <summary>
         /// Nơi cấp Số chưng minh / căn cước
@@ -90,42 +90,46 @@ namespace MISA.CukCuk.Core.Entity
         /// <summary>
         /// Ngày gia nhập
         /// </summary>
-        public DateTime JoinDate { get; set; }
+        public DateTime? JoinDate { get; set; }
 
         /// <summary>
         /// Trạng thái 
         /// </summary>
-        public int MartialStatus { get; set; }
+        public int? MartialStatus { get; set; }
 
         /// <summary>
         /// Nền tảng giáo dục
         /// </summary>
-        public int EducationalBackground { get; set; }
+        public int? EducationalBackground { get; set; }
 
         /// <summary>
         /// Trình độ chuyên môn
         /// </summary>
-        public Guid QualificationId { get; set; }
+        public Guid? QualificationId { get; set; }
 
+        [MISANotMap]
+        public string DepartmentName { get; set; }
         /// <summary>
         /// Khóa ngoại của chức vụ
         /// </summary>
-        public Guid DepartmentId { get; set; }
+        public Guid? DepartmentId { get; set; }
 
+        [MISANotMap]
+        public string PositionName { get; set; }
         /// <summary>
         /// Khóa ngoại của vị trí
         /// </summary>
-        public Guid PositionId { get; set; }
+        public Guid? PositionId { get; set; }
 
         /// <summary>
         /// Trạng thái công việc
         /// </summary>
-        public int WorkStatus { get; set; }
+        public int? WorkStatus { get; set; }
 
         /// <summary>
         /// Mã số thuế
         /// </summary>
-        public string PersonalTaxCode { get; set; }
+        public string? PersonalTaxCode { get; set; }
         #endregion
     }
 }

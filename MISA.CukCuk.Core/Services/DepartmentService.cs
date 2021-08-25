@@ -11,8 +11,10 @@ namespace MISA.CukCuk.Core.Services
 {
     public class DepartmentService : BaseService<Department>, IDepartmentServices
     {
+        #region DECLEAR
         public DepartmentService(IDepartmentRepository departmentRepository) : base(departmentRepository)
         {
         }
+        #endregion
     }
 }

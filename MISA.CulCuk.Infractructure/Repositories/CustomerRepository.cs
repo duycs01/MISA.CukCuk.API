@@ -28,30 +28,27 @@ namespace MISA.CukCuk.Infractructure.Repositories
         /// <param name="configuration"></param>
         public CustomerRepository(IConfiguration configuration) : base(configuration)
         {
-         
         }
         #endregion
 
         #region Method
-
         /// <summary>
-        /// Kiểm tra trùng mã nhân viên
+        /// Kiểm tra trùng mã khách hàng, số điện thoại, emaiil 
         /// </summary>
-        /// <param name="customerCode">Truyền vào mã nhân viên</param>
-        /// <returns>true/false</returns>
+        /// <param name="input">Truyền vào mã khách hàng, số điện thoại, emaiil</param>
+        /// <returns>true là đã trùng/false không trùng</returns>
         /// CreateBy duylv - 12/08/2021
-        public bool CheckDuplicate(Guid? customerId, string customerCode)
+        public bool CheckDuplicate(Guid? customerId, string input)
         {
-
             DynamicParameters dynamicParameters = new DynamicParameters();
 
-            dynamicParameters.Add("@customerCode", customerCode);
-            dynamicParameters.Add("@PhoneNumber", customerCode);
-            dynamicParameters.Add("@Email", customerCode);
+            dynamicParameters.Add("@customerCode", input);
+            dynamicParameters.Add("@PhoneNumber", input);
+            dynamicParameters.Add("@Email", input);
 
 
-            var sqlCommand = "SELECT CustomerCode FROM Customer WHERE CustomerCode = @customerCode " +
-                "OR PhoneNumber = @PhoneNumber OR Email = @Email";
+            var sqlCommand = "SELECT * FROM Customer WHERE CustomerCode = @customerCode " +
+                "OR PhoneNumber = @PhoneNumber OR Email = @Email LIMIT 1";
 
             var res = _dbConnection.QueryFirstOrDefault(sqlCommand, dynamicParameters);
 
@@ -65,20 +62,36 @@ namespace MISA.CukCuk.Infractructure.Repositories
             }
         }
 
-        public int DeleteListId(dynamic listId)
+        /// <summary>
+        /// Xóa danh sách khách hàng
+        /// </summary>
+        /// <param name="listId">Danh sách khách hàng</param>
+        /// <returns>Số hang xóa được</returns>
+        /// CreateBy duylv - 16/08/2021
+        /// 
+        public int DeleteListId(List<Guid> listId)
         {
             var transaction = _dbConnection.BeginTransaction();
             DynamicParameters parameters = new DynamicParameters();
             var rowEffects = 0;
-            foreach (var item in listId["CustomerId"])
+            foreach (var item in listId)
             {
-                parameters.Add("@CustomerId", Convert.ToString(item));
+                parameters.Add("@CustomerId", item.ToString());
                 rowEffects += _dbConnection.Execute($"Proc_DeleteCustomer",  parameters, transaction: transaction, commandType: CommandType.StoredProcedure);
             }
             transaction.Commit();
             return rowEffects;
         }
 
+        /// <summary>
+        /// Thực hiện phân trang và lọc bản ghi
+        /// </summary>
+        /// <param name="filterName">Lọc bản ghi theo tên, số điện thoại, mã khách hàng</param>
+        /// <param name="customerGroupId">Id nhóm khách hàng</param>
+        /// <param name="pageSize">Số lượng bản ghi trên một trang</param>
+        /// <param name="pageIndex">Vị trí của trang</param>
+        /// <returns>Tổng số trang, tổng số bản ghi,  vad data</returns>
+        /// CreateBy duylv - 19/08/2021
         public Paging GetCustomerPaging(string filterName , Guid? customerGroupId, int pageSize, int pageIndex)
         {
             DynamicParameters dynamicParameters = new DynamicParameters();
@@ -105,30 +118,38 @@ namespace MISA.CukCuk.Infractructure.Repositories
         }
 
 
+        /// <summary>
+        /// Thêm danh sách khách hàng vào data
+        /// </summary>
+        /// <param name="listCustomers">Danh sách khách hàng</param>
+        /// <returns>Số lượng thêm được</returns>
+        /// CreateBy duylv - 20/08/2021
         public int InsertListCustomer(List<Customer> listCustomers)
         {
-            var transaction = _dbConnection.BeginTransaction();
-
-            var customer = new Customer();
-            var properties = customer.GetType().GetProperties();
-            foreach (var prop in properties)
-            {
-                if (prop.Name == $"CustomerId")
-                {
-                    prop.SetValue(customer, Guid.NewGuid());
-                }
-            }
-            var parameters = MappingDBType(customer);
             var rowEffects = 0;
-            for (int i = 0; i < 10; i++)
+            var transaction = _dbConnection.BeginTransaction();
+            foreach (var customer in listCustomers)
             {
-                rowEffects += _dbConnection.Execute($"Proc_InsertCustomer", parameters, commandType: CommandType.StoredProcedure);
+                customer.CustomerId = Guid.NewGuid();
+                var parameters = MappingDBType(customer);
+                rowEffects += _dbConnection.Execute($"Proc_InsertCustomer", param:parameters, transaction:transaction, commandType: CommandType.StoredProcedure);
             }
             transaction.Commit();
             return rowEffects;
         }
-    }
 
+        /// <summary>
+        /// Lấy mã có ngày thêm vào mới nhất
+        /// </summary>
+        /// <returns>Trả về mã có ngày mới nhất</returns>
+        /// CreateBy duylv - 21/08/2021
+        public string NewCode()
+        {
+            var sqlCommand = "SELECT CustomerCode FROM Customer ORDER BY CreatedDate DESC LIMIT 1";
+            var res = _dbConnection.QueryFirstOrDefault<string>(sqlCommand);
+            return res;
+        }
+    }
     #endregion 
 
  }

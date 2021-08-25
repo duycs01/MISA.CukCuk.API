@@ -9,7 +9,6 @@ namespace MISA.CukCuk.Core.Interfaces.Repository
 {
     public interface ICustomerGroupRepository : IBaseRepository<CustomerGroup>
     {
-
     }
 
 }

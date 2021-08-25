@@ -10,41 +10,41 @@ namespace MISA.CukCuk.Core.Interfaces.Services
     public interface IBaseService <MISAEntity>
     {
         /// <summary>
-        /// Lấy danh sách dữ liệu
+        /// Lấy danh sách bản ghi
         /// </summary>
         /// <returns>ServiceResult - Kết quả sử lí qua nghiệp vụ</returns>
         /// Created by: duylv-14/8/2021
         ServiceResult GetAll ();
 
         /// <summary>
-        /// Lấy thông tin dữ liệu qua entityId
+        /// Lấy thông tin bản ghi qua Id
         /// </summary>
-        /// <param name="entityId">entityId dữ liệu</param>
+        /// <param name="entityId">Id bản ghi</param>
         /// <returns>ServiceResult - Kết quả sử lí qua nghiệp vụ</returns>
         /// Created by: duylv-14/8/2021
         ServiceResult GetById (Guid entityId);
 
         /// <summary>
-        /// Thêm thông tin dữ liệu
+        /// Thêm thông tin bản ghi
         /// </summary>
-        /// <param name="entity">Thông tin dữ liệu</param>
+        /// <param name="entity">Thông tin bản ghi</param>
         /// <returns>ServiceResult - Kết quả sử lí qua nghiệp vụ</returns>
         /// Created by: duylv-14/8/2021 
         ServiceResult Insert(MISAEntity entity);
 
         /// <summary>
-        /// Sửa thông tin dữ liệu
+        /// Sửa thông tin bản ghi
         /// </summary>
-        /// <param name="entityId">entityId dữ liệu</param>
-        /// <param name="entity">Thông tin dữ liệu</param>
+        /// <param name="entityId">Id bản ghi</param>
+        /// <param name="entity">Thông tin bản ghi</param>
         /// <returns>ServiceResult - Kết quả sử lí qua nghiệp vụ</returns>
         /// Created by: duylv-14/8/2021
         ServiceResult Update (Guid entityId, MISAEntity entity);
 
         /// <summary>
-        /// Xóa thông tin dữ liệu
+        /// Xóa thông tin bản ghi
         /// </summary>
-        /// <param name="entityId">entityId dữ liệu</param>
+        /// <param name="entityId">Id bản ghi</param>
         /// <returns></returns>
         /// Created by: duylv-14/8/2021
         ServiceResult DeleteById (Guid entityId);

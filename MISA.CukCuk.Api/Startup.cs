@@ -21,6 +21,7 @@ namespace MISA.CukCuk.Api
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,7 +32,12 @@ namespace MISA.CukCuk.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -53,6 +59,14 @@ namespace MISA.CukCuk.Api
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IEmployeeServices, EmployeeService>();
 
+            services.AddScoped<ICustomerGroupRepository, CustomerGroupRepository>();
+            services.AddScoped<ICustomerGroupServices, CustomerGroupService>();
+
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            services.AddScoped<IDepartmentServices, DepartmentService>();
+
+            services.AddScoped<IPositionRepository, PositionRepository>();
+            services.AddScoped<IPositionServices, PositionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +78,7 @@ namespace MISA.CukCuk.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MISA.CukCuk.Api v1"));
             }
+            app.UseCors("MyPolicy");
 
             app.UseHttpsRedirection();
 
